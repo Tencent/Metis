@@ -1,0 +1,127 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+const moment = require('moment');
+
+Model('create', {
+  data: {
+    currentStep: 0,
+    steps: [
+      { title: '样本选择' },
+      { title: '信息确认' },
+    ],
+    source: [],
+    trainOrTest: [],
+    dateTime: [moment().subtract(1, 'days'), moment()],
+    positiveCount: 0,
+    negativeCount: 0,
+    trainSourceList: [],
+    readyToTrain: false,
+    countQuerying: false,
+    countErrorMsg: '',
+    sourceErrorMsg: '',
+    trainOrTestErrorMsg: '',
+    trainLoading: false,
+  },
+
+  setData(info) {
+    Object.assign(this.data, info);
+  },
+
+  // 拉取样本来源列表
+  queryTrainSource() {
+    uw.request({
+      url: '/QueryTrainSource',
+      method: 'POST',
+      data: {},
+      success: ({ code, data, msg }) => {
+        let sourceList = []
+        for (let row of data.source) {
+          sourceList.push({
+            value: row,
+            label: row,
+          })
+        }
+        this.setData({ trainSourceList: sourceList });
+      },
+    });
+  },
+
+  // 获取样本统计数据
+  querySampleCount() {
+    this.setData({
+      countQuerying: true,
+      readyToTrain: false,
+      countErrorMsg: '',
+    })
+    uw.request({
+      url: '/CountSample',
+      method: 'POST',
+      data: {
+        beginTime: this.data.dateTime[0].unix(),
+        endTime: this.data.dateTime[1].unix(),
+        positiveOrNegative: '',
+        trainOrTest: this.data.trainOrTest,
+        source: this.data.source,
+      },
+      success: ({ code, data, msg }) => {
+        if (code === 0) {
+          if (data.count[0].positive_count === 0 || data.count[0].negative_count === 0) {
+            this.setData({
+              readyToTrain: false,
+              countErrorMsg: '正样本或负样本数量为0，无法开始训练',
+            });
+          }
+          this.setData({
+            positiveCount: data.count[0].positive_count,
+            negativeCount: data.count[0].negative_count,
+            readyToTrain: true,
+          });
+        }
+        else {
+          this.setData({
+            readyToTrain: false,
+            countErrorMsg: msg,
+          });
+        }
+        this.setData({ countQuerying: false });
+      },
+    });
+  },
+
+  // 训练样本
+  trainSample() {
+    this.setData({
+      countErrorMsg: '',
+      trainLoading: true,
+    });
+    uw.request({
+      url: '/Train',
+      method: 'POST',
+      data: {
+        beginTime: this.data.dateTime[0].unix(),
+        endTime: this.data.dateTime[1].unix(),
+        positiveOrNegative: '',
+        trainOrTest: this.data.trainOrTest,
+        source: this.data.source,
+      },
+      success: ({ code, data, msg }) => {
+        if (code === 0) {
+          Notification.succeed({ title: '开始训练成功' });
+          $props.history.push(`/sample/train`);
+        }
+        else {
+          this.setData({
+            countErrorMsg: '开始训练失败' + msg,
+            trainLoading: false,
+          });
+        }
+      },
+    });
+  },
+})

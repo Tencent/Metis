@@ -1,0 +1,14 @@
+{
+  "currentPage": 1,
+  "pageSize": 20,
+  "pageSizeOptions": [20, 50, 100],
+  "sampleTrans" : {
+    "test": "测试集",
+    "train": "训练集",
+    "positive": "正样本",
+    "negative": "负样本",
+    "180": "180分钟",
+    "720": "720分钟"
+  },
+  "errorDelay": 5000
+}

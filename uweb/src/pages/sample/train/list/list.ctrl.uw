@@ -1,0 +1,190 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+const moment = require('moment');
+const { getTableCell } = require('../../../common.js');
+
+Controller('list', {
+  onLoad() {
+    $model.list.queryList(true);
+    $model.list.querySourceList();
+  },
+
+  // ActionBar
+  onSearchChange(value) {
+    $model.list.setData({ searchText: value });
+  },
+
+  onSearch() {
+    $model.list.setData({ currentPage: 1 });
+    $model.list.queryList();
+  },
+
+  onAdvanceFilterExpand() {
+    $model.list.setData({ expand: !$model.list.data.expand });
+  },
+
+  // 高级搜索
+  onAdvanceFilterChange(field) {
+    return (value) => {
+      const advanceSearchTemp = _.cloneDeep($model.list.data.advanceSearchTemp);
+      advanceSearchTemp[field].value = value;
+      advanceSearchTemp[field].valueText = value;
+      if (field === 'taskStatus') {
+        advanceSearchTemp[field].value = value.value;
+        advanceSearchTemp[field].valueText = value.label;
+      } else if (field === 'beginDateTime') {
+        advanceSearchTemp[field].valueText = `${value[0].format('YYYY-MM-DD HH:mm')} - ${value[1].format('YYYY-MM-DD HH:mm')}`;
+      }
+      $model.list.setData({ advanceSearchTemp });
+    };
+  },
+
+  onAdvanceFilterQuery() {
+    $model.list.setData({ advanceSearch: { ...$model.list.data.advanceSearchTemp }, expand: false, currentPage: 1 });
+    $model.list.queryList();
+  },
+
+  getAdvanceFilterResult() {
+    let result = _.map($model.list.data.advanceSearch, (value, key) => {
+      return ({ value: value.valueText, label: value.label, key });
+    });
+    result = _.filter(result, o => !!o.value);
+    return result;
+  },
+
+  onAdvanceFilterResultClose(key) {
+    const advanceSearch = _.cloneDeep($model.list.data.advanceSearch);
+    advanceSearch[key].value = undefined;
+    advanceSearch[key].valueText = undefined;
+    $model.list.setData({ advanceSearch, advanceSearchTemp: advanceSearch, currentPage: 1 });
+    $model.list.queryList();
+  },
+
+  onAdvanceFilterClear() {
+    $model.list.resetAdvanceSearch();
+  },
+
+  // 表格
+  onTableChange(pagination) {
+    $model.list.setData({
+      currentPage: $model.list.data.currentPage !== pagination.currentPage ? pagination.currentPage : 1,
+      pageSize: pagination.pageSize,
+    });
+    $model.list.queryList();
+  },
+
+  onSearchReset() {
+    $model.list.resetSearch();
+  },
+
+  getTableColumns() {
+    return [
+      {
+        key: 'id',
+        dataIndex: 'id',
+        title: '任务ID',
+        render: text => getTableCell(text),
+      },
+      {
+        key: 'sampleNum',
+        dataIndex: 'sampleNum',
+        title: '样本总数',
+        width: 100,
+        render: text => getTableCell(text),
+      },
+      {
+        key: 'negativeSampleNum',
+        dataIndex: 'negativeSampleNum',
+        title: '负样本数',
+        width: 100,
+        render: text => getTableCell(text),
+      },
+      {
+        key: 'positiveSampleNum',
+        dataIndex: 'positiveSampleNum',
+        title: '正样本数',
+        width: 100,
+        render: text => getTableCell(text),
+      },
+      {
+        key: 'source',
+        dataIndex: 'source',
+        title: '样本来源',
+        render: text => getTableCell(text),
+      },
+      {
+        key: 'status',
+        dataIndex: 'status',
+        title: '任务状态',
+        width: 120,
+        render: text => {
+          switch (text) {
+            case 'running':
+              return <span><Icon type="loading" /> 正在训练</span>;
+              break;
+            case 'complete':
+              return <span style={{ color: '#0ABF5B' }}>训练完成</span>;
+              break;
+            case 'failed':
+              return <span style={{ color: '#E54545' }}>训练失败</span>;
+              break;
+            default:
+              return getTableCell(text);
+          }
+        },
+      },
+      {
+        key: 'modelName',
+        dataIndex: 'modelName',
+        title: '模型名称',
+        render: text => getTableCell(text),
+      },
+      {
+        key: 'startTime',
+        dataIndex: 'startTime',
+        title: '开始时间',
+        width: 150,
+        render: text => {
+          if (text) {
+            return moment.unix(text).format('YYYY-MM-DD HH:mm');
+          } else {
+            return getTableCell(text);
+          }
+        },
+      },
+      {
+        key: 'endTime',
+        dataIndex: 'endTime',
+        title: '结束时间',
+        width: 150,
+        render: text => {
+          if (text === 0) {
+            return '-';
+          } else {
+            return moment.unix(text).format('YYYY-MM-DD HH:mm');
+          }
+        },
+      },
+      {
+        key: 'action',
+        title: '操作',
+        width: 80,
+        render: (text, record) => {
+          const showDelelte = () => {
+            Dialog.warning({
+              title: '确定删除此训练任务？',
+              onOk: () => $model.list.deleteTask(record.id),
+            });
+          };
+          return <a onClick={showDelelte} disabled={record.status === 'running'}>删除</a>;
+        },
+      },
+    ];
+  },
+})

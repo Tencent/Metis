@@ -1,0 +1,123 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+const moment = require('moment');
+const CONFIG = require('../../constant.json');
+
+Model('query', {
+  data: {
+    dateTime: [moment().year(2018).month(9).date(1).hour(0).minute(0).second(0), moment().year(2018).month(9).date(7).hour(23).minute(59).second(59)],
+    viewName: '',
+    attrName: '',
+    currentPage: 1,
+    pageSize: 6,
+    pageSizeOptions: [6, 9, 12, 24],
+    total: 0,
+    defaultChartOption: {},
+    loading: false,
+    anomalyList: [],
+    markFlagList: [],
+    extendChart: {
+      visible: false,
+      option: {},
+      title: '',
+    },
+    errMsg: '',
+  },
+
+  setData(info) {
+    Object.assign(this.data, info);
+  },
+
+  queryAnomalyList() {
+    this.setData({ loading: true });
+    const { currentPage, pageSize, viewName, attrName, dateTime } = this.data;
+    let params = { requestPage: currentPage, itemPerPage: pageSize, beginTime: dateTime[0].unix(), endTime: dateTime[1].unix(), attrId: attrName, viewId: viewName };
+    uw.request({
+      url: '/SearchAnomaly',
+      method: 'POST',
+      data: params,
+      success: ({ code, data, msg }) => {
+        if (code === 0) {
+          const { totalCount, anomalyList = [] } = data;
+          this.setData({
+            anomalyList: anomalyList.map((item) => {
+              const anomalyTime = moment.unix(item.time);
+              let chartOption = _.cloneDeep(this.data.defaultChartOption);
+              chartOption.xAxis.data = this.getXAsixList(item.time, item.dataA.length - 1);
+              chartOption.series[0].data = item.dataA;
+              chartOption.series[1].data = item.dataB;
+              chartOption.series[2].data = item.dataC;
+              chartOption.series[0].markLine = {
+                silent: true,
+                symbol: 'circle',
+                lineStyle: {
+                  normal: { color: '#e54545', width: 1, type: 'dotted', opacity: 0.8 },
+                },
+                data: [{ xAxis: anomalyTime.format('HH:mm') }],
+                label: {
+                  formatter: (params) => {
+                    return anomalyTime.format('YYYY-MM-DD HH:mm');
+                  },
+                },
+              };
+              item.chartOption = chartOption;
+              return item;
+            }),
+            total: totalCount,
+            errMsg: '',
+          });
+        } else {
+          this.setData({
+            anomalyList: [],
+            total: 0,
+            errMsg: msg,
+          });
+        }
+        this.setData({ loading: false });
+      },
+    });
+  },
+
+  getXAsixList(anomalyTimeUnix, length) {
+    const xAxisList = [moment.unix(anomalyTimeUnix).format('HH:mm')];
+    for (let i = 1; i <= length; i++) {
+      xAxisList.push(moment.unix(anomalyTimeUnix).add(i, 'm').format('HH:mm'));
+      xAxisList.unshift(moment.unix(anomalyTimeUnix).subtract(i, 'm').format('HH:mm'));
+    }
+    return xAxisList;
+  },
+
+  updateMarkFlag(newMarkFlag, id) {
+    let markFlagList = _.cloneDeep(this.data.markFlagList);
+    markFlagList.push({ newMarkFlag, id });
+    this.setData({ markFlagList });
+    uw.request({
+      url: '/UpdateAnomaly',
+      method: 'POST',
+      data: { id, markFlag: newMarkFlag },
+      success: ({ code, data, msg }) => {
+        if (code === 0) {
+          let anomalyList = _.cloneDeep(this.data.anomalyList);
+          for (let i = 0; i < anomalyList.length; i++) {
+            if (anomalyList[i].id === id) {
+              anomalyList[i].markFlag = newMarkFlag;
+              break;
+            }
+          }
+          this.setData({ anomalyList });
+        } else {
+          Notification.error({ title: newMarkFlag === 0 ? '取消标记失败' : '标记失败', content: msg, delay: CONFIG.errorDelay });
+        }
+        let markFlagList = _.cloneDeep(this.data.markFlagList);
+        _.remove(markFlagList, (item) => item.id === id);
+        this.setData({ markFlagList });
+      },
+    });
+  }
+})

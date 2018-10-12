@@ -1,0 +1,86 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+{/* import src="./create.model.uw" */}
+{/* import src="./create.ctrl.uw" */}
+{/* style src="./create.less" */}
+
+<Page title="新建训练" onBack={() => { $props.history.push('/sample/train') }}>
+  <Content>
+    <Panel>
+      <Step current={$model.create.data.currentStep} steps={$model.create.data.steps} />
+      {
+        $model.create.data.currentStep === 0 ? (
+          <Form>
+            <FormItem label="样本来源" help={$model.create.data.sourceErrorMsg} hasError={$model.create.data.sourceErrorMsg != ""}>
+              <Dropdown
+                size='large'
+                placeholder='必填项'
+                multiple={true}
+                style={{ width: 253 }}
+                options={$model.create.data.trainSourceList}
+                value={$model.create.data.source}
+                onChange={$controller.create.onSourceChange}
+                onBlur={$controller.create.onSourceBlur}
+              />
+            </FormItem>
+            <FormItem label="测试/训练集" help={$model.create.data.trainOrTestErrorMsg} hasError={$model.create.data.trainOrTestErrorMsg != ""}>
+              <Dropdown
+                size='large'
+                placeholder='必填项'
+                multiple={true}
+                style={{ width: 253 }}
+                options={[
+                  { value: 'test', label: '测试集' },
+                  { value: 'train', label: '训练集' },
+                ]}
+                value={$model.create.data.trainOrTest}
+                onChange={$controller.create.onTrainOrTestChange}
+                onBlur={$controller.create.onTrainOrTestBlur}
+              />
+            </FormItem>
+            <FormItem label="时间范围">
+              <DateTimePicker
+                style={{ width: 240 }}
+                format="YYYY-MM-DD HH:mm"
+                value={$model.create.data.dateTime}
+                onChange={$controller.create.onDateTimeChange}
+              />
+            </FormItem>
+            <FormItem>
+              <Button type="primary" onClick={$controller.create.onNextStep}>下一步</Button>
+            </FormItem>
+          </Form>
+        ) : (
+            <Form>
+              <FormItem label="样本来源">
+                <p>{$model.create.data.source.join(', ')}</p>
+              </FormItem>
+              <FormItem label="测试/训练集">
+                <p>{$controller.create.getShowTrainOrTest()}</p>
+              </FormItem>
+              <FormItem label="时间范围">
+                <p>{`${$model.create.data.dateTime[0].format('YYYY-MM-DD HH:mm')} - ${$model.create.data.dateTime[1].format('YYYY-MM-DD HH:mm')}`}</p>
+              </FormItem>
+              <FormItem label="正样本数量">
+                {$model.create.data.countQuerying ? <Icon type="loading" /> : !$model.create.data.readyToTrain ? <p>-</p> : <p>{$model.create.data.positiveCount}</p>}
+              </FormItem>
+              <FormItem label="负样本数量">
+                {$model.create.data.countQuerying ? <Icon type="loading" /> : !$model.create.data.readyToTrain ? <p>-</p> : <p>{$model.create.data.negativeCount}</p>}
+              </FormItem>
+              <FormItem>
+                <Button onClick={$controller.create.onPreStep}>上一步</Button>
+                <Button type="primary" onClick={$controller.create.onTrain} disabled={$model.create.data.countErrorMsg != '' || $model.create.data.trainLoading}>{$model.create.data.trainLoading ? <Icon type="loading" /> : ''}开始训练</Button>
+                <Plugins.ErrorMessage>{$model.create.data.countErrorMsg}</Plugins.ErrorMessage>
+              </FormItem>
+            </Form>
+          )
+      }
+    </Panel>
+  </Content>
+</Page>

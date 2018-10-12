@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "strictNullChecks": true,
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "experimentalDecorators": true,
+      "jsx": "react",
+      "noUnusedParameters": true,
+      "noUnusedLocals": true,
+      "sourceMap": false,
+      "skipLibCheck": true,
+      "target": "es5",
+      "module": "esnext",
+      "allowJs": true,
+      "lib": ["dom", "es5", "es6", "es7", "esnext"],
+      "typeRoots": [
+        "../../../../node_modules/@types",
+      ]
+    }
+  }
+  

@@ -1,0 +1,90 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+.uw-login {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-image: url('../static/login-bg.jpg');
+  background-size: cover;
+  height: auto;
+  top: 0;
+  left: 0;
+
+  .tc-15-input-text.xl {
+    height: 40px;
+  }
+
+  .uw-login-button {
+    margin-bottom: 40px;
+
+    .uw-btn.tc-15-btn {
+      height: 40px;
+      width: 330px;
+      font-size: 16px;
+    }
+  }
+
+  &.error {
+    .error-msg {
+      text-align: center;
+      color: #E54545;
+      margin-top: 28px;
+    }
+
+    .uw-login-button {
+      margin-top: 10px;
+    }
+  }
+
+  .uw-view-container {
+    top: 0;
+    background-color: transparent;
+  }
+
+  .tc-panel {
+    position: absolute;
+    width: 450px;
+    top: 20%;
+    border-radius: 5px;
+    left: 50%;
+    margin-left: -225px;
+  }
+
+  .tc-panel .tc-panel-bd {
+    .form-label {
+      width: 40px;
+    }
+  }
+
+  .login-title {
+    font-size: 23px;
+    font-weight: 400;
+    margin-top: 15px;
+    margin-bottom: 40px;
+    text-align: center;
+    color: #333;
+  }
+
+  .login-logo {
+    @image-width: 260px;
+    text-align: center;
+    position: absolute;
+    top: 165px;
+    left: 50%;
+    margin-left: -(@image-width / 2) + 20;
+    img {
+      width: @image-width;
+    }
+  }
+
+  .uw-login-button {
+    text-align: center;
+    margin-top: 40px;
+  }
+}

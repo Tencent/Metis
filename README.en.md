@@ -1,0 +1,1 @@
+[Click me switch to Chinese version](README.md)

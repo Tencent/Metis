@@ -1,0 +1,155 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+const moment = require('moment');
+const CONFIG = require('../../../constant.json');
+const advanceSearchDefault = {
+  beginDateTime: { label: '开始时间', value: undefined, valueText: '' },
+  taskStatus: { label: '任务状态', value: undefined, valueText: '' },
+  source: { label: '样本来源', value: undefined, valueText: '' },
+};
+
+Model('list', {
+  data: {
+    expand: false,
+    searchText: '',
+    advanceSearch: _.cloneDeep(advanceSearchDefault),
+    advanceSearchTemp: _.cloneDeep(advanceSearchDefault),
+    sourceList: [],
+    taskStatusList: [{ label: '正在训练', value: 'running' }, { label: '训练完成', value: 'complete' }, { label: '训练失败', value: 'failed' }],
+    sortInfo: null,
+    columns: [],
+    currentPage: CONFIG.currentPage,
+    pageSize: CONFIG.pageSize,
+    pageSizeOptions: CONFIG.pageSizeOptions,
+    total: 0,
+    dataSource: [],
+    errMsg: '',
+    tableLoading: false,
+    isEmpty: false,
+    pageLoading: false,
+  },
+
+  setData(info) {
+    Object.assign(this.data, info);
+  },
+
+  queryList(isFirstTime = false) {
+    if (window.location.pathname !== '/sample/train') {
+      clearTimeout(this.timer);
+      return;
+    } else {
+      this.setData({
+        pageLoading: isFirstTime,
+        tableLoading: true,
+      });
+      const params = {
+        requestPage: this.data.currentPage,
+        itemPerPage: this.data.pageSize,
+        taskId: _.trim(this.data.searchText) || '',
+        beginTime: '',
+        endTime: '',
+        taskStatus: '',
+        source: '',
+      };
+      params.taskId = _.trim(this.data.searchText) || '';
+      _.map(this.data.advanceSearch, (obj, key) => {
+        const value = obj.value;
+        if (key === 'beginDateTime' && _.isArray(value) && value.length === 2) {
+          params.beginTime = value[0].unix();
+          params.endTime = value[1].unix();
+        } else if (!!value) {
+          params[key] = value;
+        }
+      });
+      uw.request({
+        url: '/QueryTrain',
+        method: 'POST',
+        data: params,
+        success: ({ code, data, msg }) => {
+          if (code === 0) {
+            this.setData({
+              dataSource: data.taskList || [],
+              total: data.totalCount || 0,
+              errMsg: '',
+            });
+            this.checkIsEmpty(this.data.dataSource, params);
+          } else {
+            this.setData({
+              dataSource: [],
+              total: 0,
+              errMsg: msg,
+            });
+          }
+          this.setData({
+            tableLoading: false,
+            pageLoading: false,
+          });
+        },
+      });
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.queryList();
+      }, 30000);
+    }
+  },
+
+  checkIsEmpty(dataSource, params) {
+    if (dataSource.length === 0 && !params.taskId && !params.beginTime && !params.endTime && !params.taskStatus && !params.source) {
+      this.data.isEmpty = true;
+    } else {
+      this.data.isEmpty = false;
+    }
+  },
+
+  querySourceList() {
+    uw.request({
+      url: '/QueryTrainSource',
+      method: 'POST',
+      data: {},
+      success: ({ code, data, msg }) => {
+        if (code === 0) {
+          this.setData({ sourceList: data.source || [] });
+        } else {
+          this.setData({ sourceList: [] });
+          Notification.error({ title: '获取样本来源失败', content: msg, delay: CONFIG.errorDelay });
+        }
+      },
+    });
+  },
+
+  resetSearch() {
+    this.data.searchText = '';
+    this.resetAdvanceSearch();
+  },
+
+  resetAdvanceSearch() {
+    this.setData({
+      advanceSearch: advanceSearchDefault,
+      advanceSearchTemp: advanceSearchDefault,
+      currentPage: 1,
+    });
+    this.queryList();
+  },
+
+  deleteTask(id) {
+    uw.request({
+      url: '/DeleteTrain',
+      method: 'POST',
+      data: { taskId: id.toString() },
+      success: ({ code, data, msg }) => {
+        if (code === 0) {
+          Notification.succeed({ content: '删除成功' });
+          this.queryList();
+        } else {
+          Notification.error({ title: '删除失败', content: msg, delay: CONFIG.errorDelay });
+        }
+      },
+    });
+  },
+})

@@ -1,0 +1,29 @@
+{
+  "name": "metis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commitmsg": "commitlint -e $GIT_PARAMS"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lxd1190/metis_test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lxd1190/metis_test/issues"
+  },
+  "homepage": "https://github.com/lxd1190/metis_test#readme",
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "@commitlint/travis-cli": "^6.2.0",
+    "@commitlint/config-conventional": "^6.1.3",
+    "@commitlint/cli": "^6.2.0"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "loginType": false,
+  "request": {
+    "development": {
+      "origin": "http://127.0.0.1:8080",
+      "crossOrigin": "cors"
+    },
+    "production": {
+      "origin": "http://127.0.0.1:8080",
+      "crossOrigin": "cors"
+    }
+  },
+  "homePage": "/anomaly/query",
+  "logoUrl": "/custom/image/metisLogo.png",
+  "favicon": "/custom/image/metisFavicon.png",
+  "modules": [
+    {
+      "title": "异常视图",
+      "pages": [
+        {
+          "title": "异常查询",
+          "path": "/anomaly/query"
+        }
+      ]
+    },
+    {
+      "title": "样本库",
+      "pages": [
+        {
+          "title": "样本管理",
+          "path": "/sample/sampleinfo"
+        },
+        {
+          "title": "训练模型",
+          "path": "/sample/train"
+        }
+      ]
+    }
+  ],
+  "pages": {
+    "/sample/sampleinfo": { "file": "pages/sample/sampleInfo/sampleInfo" },
+    "/sample/train": { "file": "pages/sample/train/list/list" },
+    "/sample/train/create": { "file": "pages/sample/train/create/create" },
+    "/anomaly/query": { "file": "pages/anomaly/query/query" }
+  }
+}

@@ -1,0 +1,273 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+{/* import src="./sampleInfo.model.uw" */ }
+{/* import src="./import.model.uw" */ }
+{/* import src="./update.model.uw" */ }
+{/* import src="./delete.model.uw" */ }
+{/* import src="./sampleInfo.ctrl.uw" */ }
+{/* style src="./sampleInfo.less" */ }
+
+<Page title="样本管理">
+  <Content>
+    {$model.sampleInfo.data.onlyTimeQuery ?
+      <div>
+        <ActionBar>
+          <ActionBar.ActionArea>
+            <DateTimePicker value={$model.sampleInfo.data.dateTime} onChange={$controller.sampleInfo.onDateTimeChange()} format="YYYY-MM-DD HH:mm" />
+            <Button onClick={$controller.sampleInfo.onImport}>导入样本</Button>
+          </ActionBar.ActionArea>
+        </ActionBar>
+        <Plugins.Placeholder
+          image={require('../../assets/no-server.svg')}
+          title={'当前时间范围内没有样本'}
+          content={<span style={{ fontWeight: 'bold' }}>您可以 <span style={{ color: '#000' }}>切换时间</span> 或 <span style={{ color: '#000' }}>导入样本</span></span>}
+        />
+      </div> :
+      <div>
+        <ActionBar>
+          <ActionBar.ActionArea>
+            <DateTimePicker value={$model.sampleInfo.data.dateTime} onChange={$controller.sampleInfo.onDateTimeChange()} format="YYYY-MM-DD HH:mm" />
+            <Button onClick={$controller.sampleInfo.onImport}>导入样本</Button>
+            <Button onClick={$controller.sampleInfo.onExport} disabled={$model.sampleInfo.data.selectedRowKeys.length <= 0}>导出样本</Button>
+            <Button onClick={$controller.sampleInfo.onUpdate} disabled={$model.sampleInfo.data.selectedRowKeys.length <= 0}>编辑</Button>
+          </ActionBar.ActionArea>
+          <ActionBar.ExtraArea>
+            <div className="filter-text">
+              <a onClick={$controller.sampleInfo.onAdvanceFilterClick}>高级搜索<Icon type="arrow-down" /></a>
+            </div>
+            <SearchBox
+              placeholder="指标名称"
+              value={$model.sampleInfo.data.searchText}
+              onChange={$controller.sampleInfo.onSearchTextChange}
+              onSearch={$controller.sampleInfo.onSearch}
+            />
+          </ActionBar.ExtraArea>
+        </ActionBar>
+
+        <Panel>
+          {/* 高级搜索 */}
+          {!$model.sampleInfo.data.onlyTimeQuery ?
+            <Plugins.Filter
+              expand={$model.sampleInfo.data.expand}
+              filterContent={[
+                {
+                  label: <span>正/负样本</span>,
+                  component:
+                    <Dropdown
+                      placeholder="请选择"
+                      options={$model.sampleInfo.data.positiveOrNegativeOption}
+                      onChange={$controller.sampleInfo.onAdvanceFilterChange('positiveOrNegative')}
+                      value={$model.sampleInfo.data.advanceSearchTemp.positiveOrNegative.value}
+                    />
+                },
+                {
+                  label: <span>测试/训练集</span>,
+                  component:
+                    <Dropdown
+                      placeholder="请选择"
+                      options={$model.sampleInfo.data.trainOrTestOption}
+                      onChange={$controller.sampleInfo.onAdvanceFilterChange('trainOrTest')}
+                      value={$model.sampleInfo.data.advanceSearchTemp.trainOrTest.value}
+                    />
+                },
+                {
+                  label: <span>时间窗口(分钟)</span>,
+                  component:
+                    <Dropdown
+                      placeholder="请选择"
+                      options={$model.sampleInfo.data.windowOption}
+                      onChange={$controller.sampleInfo.onAdvanceFilterChange('window')}
+                      value={$model.sampleInfo.data.advanceSearchTemp.window.value}
+                    />
+                },
+                {
+                  label: <span>样本来源</span>,
+                  component:
+                    <Dropdown
+                      placeholder="请选择"
+                      onChange={$controller.sampleInfo.onAdvanceFilterChange('source')}
+                      value={$model.sampleInfo.data.advanceSearchTemp.source.value}
+                      options={$model.sampleInfo.data.sourceList}
+                    />
+                },
+                {
+                  label: <span>指标集名称</span>,
+                  component:
+                    <Input
+                      placeholder="请输入"
+                      onChange={$controller.sampleInfo.onAdvanceFilterChange('viewName')}
+                      value={$model.sampleInfo.data.advanceSearchTemp.viewName.value}
+                    />
+                },
+              ]}
+              onQuery={$controller.sampleInfo.onAdvanceFilterQuery}
+              filterResult={$controller.sampleInfo.getAdvanceFilterResult()}
+              onResultClose={(item) => { $controller.sampleInfo.onAdvanceFilterResultClose(item.key); }}
+              onResultClear={$controller.sampleInfo.onAdvanceFilterClear}
+            /> : ''}
+
+          {/* sample表格 */}
+          {!$model.sampleInfo.data.onlyTimeQuery ?
+            <Table
+              rowKey="id"
+              columns={$controller.sampleInfo.getTableColumns()}
+              loading={$model.sampleInfo.data.tableLoading}
+              dataSource={$model.sampleInfo.data.dataSource}
+              pagination={{
+                total: $model.sampleInfo.data.total,
+                pageSize: $model.sampleInfo.data.pageSize,
+                currentPage: $model.sampleInfo.data.currentPage,
+                pageSizeOptions: $model.sampleInfo.data.pageSizeOptions,
+              }}
+              rowSelection={{
+                selectedRowKeys: $model.sampleInfo.data.selectedRowKeys,
+                selectedRows: $model.sampleInfo.data.selectedRows,
+                onChange: $controller.sampleInfo.onSelectedRowKeysChange,
+              }}
+              onChange={$controller.sampleInfo.onTableChange}
+              placeholder={
+
+                $model.sampleInfo.data.tableErrorMsg ?
+                  <Plugins.ErrorMessage>{$model.sampleInfo.data.tableErrorMsg}</Plugins.ErrorMessage> :
+                  $model.sampleInfo.data.dataSource.length === 0 ? (
+                    <span>
+                      列表为空, <a className="uw-table-reset-search" onClick={$controller.sampleInfo.onAdvanceFilterClear}>重置查询条件</a>
+                    </span>
+                  ) : ''
+              }
+            /> : ''}
+        </Panel>
+      </div>}
+
+    {/* 导入样本modal */}
+    <Dialog
+      title="导入样本"
+      maskClosable={false}
+      visible={$model.sampleInfoImport.data.importSampleVisible}
+      style={{ width: 500 }}
+      footer={(
+        <Plugins.DialogFooter
+          okLoading={!$model.sampleInfoImport.data.fileOpened}
+          onOk={$model.sampleInfoImport.data.importSuccess || !$model.sampleInfoImport.data.fileOpened ? null : $controller.sampleInfo.onImportOk}
+          onCancel={$controller.sampleInfo.onImportCancel}
+          okText="导入"
+          cancelText={$model.sampleInfoImport.data.importSuccess ? '关闭' : '取消'}
+          info={<Plugins.ErrorMessage>{$model.sampleInfoImport.data.importErrorMsg}</Plugins.ErrorMessage>}
+        />
+      )}
+    >
+      <Notification>
+        <span>模板下载</span>
+        <span style={{ marginLeft: 10 }}>
+          <a href="/custom/file/SampleTemplate.csv" download="样本导入模板.csv">样本导入模板</a>
+          <a style={{ marginLeft: 10 }} href="/custom/file/TemplateRule.xls" download="样本导入规则.xls">样本导入规则</a>
+        </span>
+      </Notification>
+
+      <Plugins.FileUpload
+        title="选择文件"
+        emptyText="不能上传空文件"
+        help={$model.sampleInfoImport.data.fileName ? `导入文件: ${$model.sampleInfoImport.data.fileName}` : "支持 csv"}
+        fileTypes={['csv']}
+        onUpload={$controller.sampleInfo.onUploadFileChange}
+      />
+      {
+        $model.sampleInfoImport.data.importSuccess ?
+          <div className="uw-upload-info">
+            <div className="uw-upload-text">
+              <span><Icon type="success-small" />导入成功！以下为导入的样本信息：</span>
+            </div>
+            <Form>
+              <FormItem label="正样本数量" >
+                <p>{$model.sampleInfoImport.data.positiveCount}</p>
+              </FormItem>
+              <FormItem label="负样本数量" >
+                <p>{$model.sampleInfoImport.data.negativeCount}</p>
+              </FormItem>
+              <FormItem label="样本总数" >
+                <p>{$model.sampleInfoImport.data.allSampleCount}</p>
+              </FormItem>
+            </Form>
+          </div> :
+          <div>
+          </div>
+      }
+    </Dialog>
+
+    {/* 编辑样本modal */}
+    <Dialog
+      title="编辑样本"
+      maskClosable={false}
+      visible={$model.sampleInfoUpdate.data.updateSampleVisible}
+      style={{ width: 500 }}
+      footer={(
+        <Plugins.DialogFooter
+          onOk={$model.sampleInfoUpdate.data.updateTrainOrTest === '' && $model.sampleInfoUpdate.data.updateSource === '' && $model.sampleInfoUpdate.data.updatePositiveOrNegative === '' ? undefined : $controller.sampleInfo.onUpdateOk}
+          onCancel={$controller.sampleInfo.onUpdateCancel}
+          info={<Plugins.ErrorMessage>{$model.sampleInfoUpdate.data.updateErrorMsg}</Plugins.ErrorMessage>}
+        />
+      )}
+      >
+      <Form>
+        <FormItem label="样本信息" >
+          {
+            $model.sampleInfoUpdate.data.singleUpdate ?
+              <span>{$model.sampleInfoUpdate.data.updateSampleName}</span> :
+              <Plugins.DetailList
+                info={$model.sampleInfoUpdate.data.updateSampleName}
+                columns={$controller.sampleInfo.getDetailListColumns()}
+                dataSource={$model.sampleInfo.data.selectedRows}
+              />
+          }
+        </FormItem>
+        <FormItem label="样本来源" help={$model.sampleInfoUpdate.data.oversizeText} hasError={$model.sampleInfoUpdate.data.oversizeText != ""} >
+          <Input
+            size="large"
+            placeholder="不输入样本来源时将不会进行修改"
+            style={{ width: 240 }}
+            value={$model.sampleInfoUpdate.data.updateSource}
+            onChange={$controller.sampleInfo.onUpdateInputChange('updateSource')}
+            onBlur={$controller.sampleInfo.onUpdateSourceBlur}
+          />
+        </FormItem>
+        <FormItem label="正/负样本" >
+          <Dropdown
+            size="large"
+            placeholder="不选择正/负样本时将不会进行修改"
+            style={{ width: 240 }}
+            options={$model.sampleInfo.data.positiveOrNegativeOption}
+            value={$model.sampleInfoUpdate.data.updatePositiveOrNegative}
+            onChange={$controller.sampleInfo.onUpdateInputChange('updatePositiveOrNegative')}
+          />
+        </FormItem>
+        <FormItem label="测试/训练集" >
+          <Dropdown
+            size="large"
+            placeholder="不选择测试/训练集时将不会进行修改"
+            style={{ width: 240 }}
+            options={$model.sampleInfo.data.trainOrTestOption}
+            value={$model.sampleInfoUpdate.data.updateTrainOrTest}
+            onChange={$controller.sampleInfo.onUpdateInputChange('updateTrainOrTest')}
+          />
+        </FormItem>
+      </Form>
+    </Dialog>
+
+    {/*查看画图modal */}
+    <Dialog
+      title={$model.sampleInfo.data.extendTitle}
+      visible={$model.sampleInfo.data.extendVisible}
+      style={{ width: 1000 }}
+      onCancel={$controller.sampleInfo.onExtendCancel}
+      cancelText="关闭"
+    >
+      {$model.sampleInfo.data.extendVisible && <Plugins.Chart option={$model.sampleInfo.data.extendChartOption} height={400} />}
+    </Dialog>
+  </Content>
+</Page>

@@ -1,0 +1,58 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+.notfound-bg {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-image: url(./login-bg.jpg);
+  background-size: cover;
+  height: auto;
+  top: 0;
+  left: 0;
+
+  .tc-panel {
+    width: 450px;
+    margin-top: 200px;
+    border-radius: 5px;
+  }
+}
+
+#uw_child_page.no-sider {
+  .uw-view-page {
+    left: 0;
+  }
+}
+
+#uw_child_page {
+  &.iframe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 200px;
+    overflow: hidden;
+
+    &.no-sider {
+      left: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border-top-width: 0px;
+      border-right-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+    }
+  }
+}
+
+#nprogress .bar {
+  background: #006eff !important;
+}

@@ -1,0 +1,392 @@
+/*
+  Tencent is pleased to support the open source community by making Metis available.
+  Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
+  Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  https://opensource.org/licenses/BSD-3-Clause
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
+
+const moment = require('moment');
+const CONFIG = require('../../constant.json');
+const { getDefaultChartOption, getTableCell } = require('../../common.js');
+const dev = require('../../../app.json');
+const defaultDateTime = [moment().subtract(1, 'days'), moment()];
+let uploadFile = undefined;
+
+Controller('sampleInfo', {
+  onLoad() {
+    const defaultChartOption = getDefaultChartOption();
+    $model.sampleInfo.setData({ defaultChartOption });
+    $model.sampleInfo.queryTrainSource();
+    $model.sampleInfo.querySample();
+  },
+
+  // 导入文件事件
+  onImport() {
+    $model.sampleInfoImport.setData({
+      importSampleVisible: true,
+      importSuccess: false,
+      fileName: null,
+      fileOpened: false,
+      importErrorMsg: '',
+      sampleUploaded: false,
+    });
+    uploadFile = undefined;
+  },
+
+  // 导出文件事件
+  onExport() {
+    let url = dev['request']['development']['origin'];
+    url = url + '/DownloadSample/?id=' + String($model.sampleInfo.data.selectedRowKeys);
+    window.open(url, '_blank');
+    $model.sampleInfo.resetSelected();
+  },
+
+  // 批量编辑事件
+  onUpdate() {
+    if ($model.sampleInfo.data.selectedRowKeys.length === 1) {
+      let row = $model.sampleInfo.data.selectedRows[0];
+      $model.sampleInfoUpdate.setData({
+        updateSampleName: row.viewName + ' - ' + row.attrName,
+        updateSource: row.source,
+        updatePositiveOrNegative: row.positiveOrNegative,
+        updateTrainOrTest: row.trainOrTest,
+        updateKeys: $model.sampleInfo.data.selectedRowKeys,
+        singleUpdate: true,
+      });
+    }
+    else {
+      let len = $model.sampleInfo.data.selectedRowKeys.length;
+      $model.sampleInfoUpdate.setData({
+        updateSampleName: $model.sampleInfo.data.selectedRows[0].viewName + ' - ' + $model.sampleInfo.data.selectedRows[0].attrName + ' 等 ' + String(len) + ' 条样本',
+        updateSource: '',
+        updatePositiveOrNegative: '',
+        updateTrainOrTest: '',
+        updateKeys: $model.sampleInfo.data.selectedRowKeys,
+        singleUpdate: false,
+      });
+    }
+    $model.sampleInfoUpdate.setData({
+      updateSampleVisible: true,
+      updateErrorMsg: null,
+      oversizeText: '',
+    });
+  },
+
+  // 单条编辑事件
+  onSingleUpdate(record) {
+    $model.sampleInfoUpdate.setData({
+      updateSampleName: record.viewName + ' - ' + record.attrName,
+      updateSource: record.source,
+      updatePositiveOrNegative: record.positiveOrNegative,
+      updateTrainOrTest: record.trainOrTest,
+      updateKeys: [record.id],
+      updateSampleVisible: true,
+      updateErrorMsg: null,
+      oversizeText: '',
+      singleUpdate: true,
+    });
+  },
+
+  // 时间change回调函数
+  onDateTimeChange() {
+    return (value) => {
+      $model.sampleInfo.setData({ dateTime: value });
+      $model.sampleInfo.resetSelected();
+      $model.sampleInfo.querySample();
+    }
+  },
+
+  // 高级搜索展开/收回
+  onAdvanceFilterClick() {
+    $model.sampleInfo.setData({ expand: !$model.sampleInfo.data.expand });
+  },
+
+  // 搜索框change回调
+  onSearchTextChange(value) {
+    $model.sampleInfo.setData({ searchText: value });
+  },
+
+  // 简单搜索事件
+  onSearch() {
+    $model.sampleInfo.setData({ expand: false, currentPage: 1 });
+    $model.sampleInfo.resetSelected();
+    $model.sampleInfo.querySample();
+  },
+
+  // 高级搜索内容change回调
+  onAdvanceFilterChange(field) {
+    return (value) => {
+      let advanceSearchTemp = _.cloneDeep($model.sampleInfo.data.advanceSearchTemp);
+      advanceSearchTemp[field].value = value;
+      advanceSearchTemp[field].valueText = value;
+      $model.sampleInfo.setData({ advanceSearchTemp });
+    }
+  },
+
+  // 高级搜索Query事件
+  onAdvanceFilterQuery() {
+    $model.sampleInfo.setData({ advanceSearch: { ...$model.sampleInfo.data.advanceSearchTemp }, expand: false, currentPage: 1 });
+    $model.sampleInfo.querySample();
+  },
+
+  // 搜索条件展示内容
+  getAdvanceFilterResult() {
+    let result = _.map($model.sampleInfo.data.advanceSearch, (value, key) => {
+      return ({ value: CONFIG.sampleTrans[value.valueText] || value.valueText, label: value.label, key });
+    });
+    result = _.filter(result, o => !!o.value);
+    return result;
+  },
+
+  // 剔除单一搜索内容
+  onAdvanceFilterResultClose(key) {
+    const advanceSearch = _.cloneDeep($model.sampleInfo.data.advanceSearch);
+    advanceSearch[key].value = undefined;
+    advanceSearch[key].valueText = undefined;
+    $model.sampleInfo.setData({ advanceSearch, advanceSearchTemp: advanceSearch, currentPage: 1 });
+    $model.sampleInfo.resetSelected();
+    $model.sampleInfo.querySample();
+  },
+
+  // 剔除全部搜索内容
+  onAdvanceFilterClear() {
+    $model.sampleInfo.resetAdvanceFilter();
+    $model.sampleInfo.resetSelected();
+    $model.sampleInfo.querySample();
+  },
+
+  // table列内容
+  getTableColumns() {
+    return [
+      {
+        title: '指标集名称',
+        key: 'viewName',
+        dataIndex: 'viewName',
+        width: '15%',
+        render: text => getTableCell(text),
+      },
+      {
+        title: '指标名称',
+        key: 'attrName',
+        dataIndex: 'attrName',
+        width: '20%',
+        render: text => getTableCell(text),
+      },
+      {
+        title: '样本来源',
+        key: 'source',
+        dataIndex: 'source',
+        width: '15%',
+        render: text => getTableCell(text),
+      },
+      {
+        title: '时间',
+        key: 'time',
+        dataIndex: 'time',
+        width: '15%',
+        render: text => getTableCell(text),
+      },
+      {
+        title: '训练/测试集',
+        key: 'trainOrTest',
+        dataIndex: 'trainOrTest',
+        width: '10%',
+        render: text => (
+          text === 'train' ? '训练集' : text === 'test' ? '测试集' : '-'
+        ),
+      },
+      {
+        title: '正/负样本',
+        key: 'positiveOrNegative',
+        dataIndex: 'positiveOrNegative',
+        width: '10%',
+        render: text => (
+          text === 'positive' ? '正样本' : text === 'negative' ? '负样本' : '-'
+        ),
+      },
+      {
+        title: '时间窗口(分钟)',
+        key: 'window',
+        dataIndex: 'window',
+        width: '15%',
+        render: text => getTableCell(text),
+      },
+      {
+        title: '操作',
+        key: 'id',
+        dataIndex: 'id',
+        width: '15%',
+        render: (text, record) => {
+          const extend = () => { this.onExtendSample(record) };
+          const update = () => { this.onSingleUpdate(record) };
+          const preDelete = () => { 
+            Dialog.warning({
+              title: '即将删除该条样本',
+              content: '删除后将无法回滚该条样本',
+              onOk: $model.sampleInfoDelete.deleteSample(record),
+            });
+          };
+          return (
+            <span>
+              <a className="option-text" onClick={extend}>查看</a>
+              <a className="option-text" onClick={update}>编辑</a>
+              <a className="option-text" onClick={preDelete}>删除</a>
+            </span>
+          )
+        },
+      },
+    ]
+  },
+
+  getDetailListColumns() {
+    return [
+      {
+        title: '指标集名称',
+        key: 'viewName',
+        dataIndex: 'viewName',
+        width: 100,
+        render: text => getTableCell(text),
+      },
+      {
+        title: '指标名称',
+        key: 'attrName',
+        dataIndex: 'attrName',
+        width: 100,
+        render: text => getTableCell(text),
+      },
+      {
+        title: '样本来源',
+        key: 'source',
+        dataIndex: 'source',
+        width: 100,
+        render: text => getTableCell(text),
+      },
+    ]
+  },
+
+  getTableCell(text) {
+    return text === '' ? '-' : text;
+  },
+
+  // 查看样本事件
+  onExtendSample(record) {
+    let chartOption = _.cloneDeep($model.sampleInfo.data.defaultChartOption);
+    chartOption.xAxis.data = record.xAxisList;
+    chartOption.series[0].data = record.dataA;
+    chartOption.series[1].data = record.dataB;
+    chartOption.series[2].data = record.dataC;
+    $model.sampleInfo.setData({
+      extendChartOption: chartOption,
+      extendTitle: record.viewName + ' - ' + record.attrName,
+      extendVisible: true,
+    });
+  },
+
+  // 查看modal关闭事件
+  onExtendCancel() {
+    $model.sampleInfo.setData({ extendVisible: false });
+  },
+
+  // 表格change回调
+  onTableChange(pagination) {
+    $model.sampleInfo.setData({
+      currentPage: $model.sampleInfo.data.currentPage !== pagination.currentPage ? pagination.currentPage : 1,
+      pageSize: pagination.pageSize,
+    });
+    $model.sampleInfo.querySample();
+  },
+
+  // 表格多选操作回调
+  onSelectedRowKeysChange(selectedRowKeys, selectedRows) {
+    $model.sampleInfo.setData({ selectedRowKeys, selectedRows });
+  },
+
+  // 上传文件回调
+  onUploadFileChange(file) {
+    uploadFile = file;
+    $model.sampleInfoImport.setData({
+      fileName: file.name,
+      importSuccess: false,
+      fileOpened: true,
+      importErrorMsg: '',
+      sampleUploaded: true,
+    });
+  },
+
+  // 上传文件确认回调
+  onImportOk() {
+    $model.sampleInfoImport.importSample(uploadFile);
+  },
+
+  // 上传文件取消回调
+  onImportCancel() {
+    $model.sampleInfoImport.setData({ importSampleVisible: false });
+    if ($model.sampleInfoImport.data.sampleUploaded) {
+      $model.sampleInfo.queryTrainSource();
+      $model.sampleInfo.querySample();
+    }
+  },
+
+  // 上传内容change回调
+  onImportInputChange(field) {
+    return (value) => {
+      let tmp = $model.sampleInfo.data;
+      tmp[field] = value;
+      $model.sampleInfo.setData({ tmp });
+    }
+  },
+
+  // 编辑内容change回调
+  onUpdateInputChange(field) {
+    return (value) => {
+      let tmp = $model.sampleInfoUpdate.data;
+      tmp[field] = value;
+      $model.sampleInfoUpdate.setData({ tmp });
+    }
+  },
+
+  // 样本来源编辑失焦校验
+  onUpdateSourceBlur() {
+    let text = $model.sampleInfoUpdate.data.updateSource;
+    let regex = /^(?!_)(?!.*?_$)[a-zA-Z0-9_]+$/;
+    if (text.length === '') {
+      $model.sampleInfoUpdate.setData({
+        oversizeText: '',
+        readyToUpdate: true,
+      });
+      return;
+    }
+    if (text.length > 32) {
+      $model.sampleInfoUpdate.setData({
+        oversizeText: '样本来源长度非法，不可以超过32位',
+        readyToUpdate: false,
+      });
+    }
+    else if (!regex.test(text)) {
+      $model.sampleInfoUpdate.setData({
+        oversizeText: '样本来源格式非法，仅支持英文字母、数字和下划线，且下划线不可以在开头或结尾',
+        readyToUpdate: false,
+      });
+    }
+    else {
+      $model.sampleInfoUpdate.setData({
+        oversizeText: '',
+        readyToUpdate: true,
+      });
+    }
+  },
+
+  // 编辑确认回调
+  onUpdateOk() {
+    if (!$model.sampleInfoUpdate.data.readyToUpdate) {
+      return;
+    }
+    $model.sampleInfoUpdate.updateSample();
+  },
+
+  // 编辑取消回调
+  onUpdateCancel() {
+    $model.sampleInfoUpdate.setData({ updateSampleVisible: false });
+  }
+})
