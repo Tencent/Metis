@@ -8,15 +8,15 @@ https://opensource.org/licenses/BSD-3-Clause
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 """
 
-from app.tests.fixtures import DataTestCase
-from app.service.feature.statistical_features import *
+from tests.fixtures import DataTestCase
+from app.service.time_series_detector.feature.statistical_features import *
 
 
 class FeatureTestCase(DataTestCase):
 
     def test_features(self):
         testdata_a = self.create_test_data_a()
-        self.assertTrue(time_series_minimum(testdata_a) == 1020900)
+        self.assertTrue(time_series_maximum(testdata_a) == 1020900)
         self.assertTrue(time_series_minimum(testdata_a) == 824757)
         self.assertTrue((time_series_mean(testdata_a) - 919324.34) < 1e-2)
     def test_two(self):
