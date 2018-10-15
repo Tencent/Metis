@@ -7,6 +7,7 @@ node_js: "8"
 
 
 install:
+    - pip tsfresh==0.11.1
     - pip install django==1.11.13
     - pip install pylint
     - pip install mysql-python
