@@ -9,7 +9,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 from tests.fixtures import DataTestCase
-from app.service.time_series_detector.feature.statistical_features import *
 from app.config.common import *
 from app.utils.utils import *
 
