@@ -20,19 +20,19 @@
 | ---  | ---  |
 | linux内核版本:| CentOS 7.4 |
 | python版本:| 2.7版本|
-| mysql版本:| 5.6.26及以上版本|
+| MySQL版本:| 5.6.26及以上版本|
 | Node.js版本:| 8.11.1及以上版本|s
 | Django版本:| 1.11.13及以上版本|
 
-运行服务器要求：1台普通安装linux系统的机器即可（推荐CentOS系统）。2.服务器需要开放80和8080端口
+运行服务器要求：1台普通安装linux系统的机器即可（推荐CentOS系统），服务器需要开放80和8080端口
 
 以下步骤假定安装机器的代码目录是 `/data/Metis/`，可根据实际情况更改。
 
 ## 1.2. <a id="chapter-1-2"></a>数据库环境安装
 
-### 1.2.1. mysql 安装介绍
+### 1.2.1. MySQL 安装介绍
 
-采用yum源安装或者在mysql官网下载源码安装，安装好后检测mysql服务是否正常工作。
+采用yum源安装或者在MySQL官网下载源码安装，安装好后检测MySQL服务是否正常工作。
 
 ```
 yum install mariadb-server
@@ -41,9 +41,9 @@ systemctl start mariadb
 
 ### 1.2.2. 初始化数据库
 
-为了方便用户快速使用，提供了50+异常检测结果数据和300+样本数据供大家使用。
+为了方便快速体验，提供了10+异常检测结果数据和300+样本数据供大家使用。
 
-1、创建需要的数据库用户名并授权，连接mysql客户端并执行
+1、创建需要的数据库用户名并授权，连接MySQL客户端并执行
 
 ```
    grant all privileges on *.* to metis@127.0.0.1  identified by 'metis@123';
@@ -56,7 +56,7 @@ systemctl start mariadb
 mysqladmin -umetis -pmetis@123 -h127.0.0.1 create metis
 ```
 
-3、将`/Metis/app/sql/`目录下的sql初始化文件，导入数据`metis`数据库
+3、将`/Metis/app/sql/time_series_detector/`目录下的sql初始化文件，导入数据`metis`数据库
 
 ```
 mysql -umetis -pmetis@123 -h127.0.0.1 metis < /data/Metis/app/sql/time_series_detector/anomaly.sql
@@ -92,7 +92,7 @@ yum install mysql-devel
 
 ### 1.3.2. pip 安装python依赖包
 
-通过工程目录下docs/requirements.txt安装
+通过工程目录下`/Metis/docs/requirements.txt`安装
 
 ```
 pip install -I -r requirements.txt
@@ -104,7 +104,7 @@ pip install -I -r requirements.txt
 export PYTHONPATH=/data/Metis:$PYTHONPATH
 ```
 
-为了保证下次登陆可以导入环境变量,请将环境变量配置写入/etc/profile文件
+为了保证下次登陆可以导入环境变量,请将环境变量配置写入服务器的`/etc/profile`文件中
 
 ### 1.3.4. 部署Django服务端
 
@@ -126,13 +126,13 @@ python /data/Metis/app/controller/manage.py runserver {ip}:{port}
 
 ### 1.4.2. npm install安装前端依赖
 
-安装 uweb/pacakge.json 配置文件中依赖的第三方安装包
+安装`/Metis/uweb/pacakge.json`配置文件中依赖的第三方安装包
 
-进入要uweb目录，执行npm install
+进入到uweb目录，执行npm install
 
 ### 1.4.3. 编译代码
 
-修改uweb/src/app.json 文件的后端地址配置: "origin": "http://${ip}:${port}" , ip和port对应服务端地址
+修改`/Metis/uweb/src/app.json`文件的后端地址配置: "origin": "http://${ip}:${port}" , ip和port对应服务端地址
 
 运行npm run build
 
@@ -166,7 +166,7 @@ server {
 
 ### 1.4.4. 启动WEB服务
 
-nginx正常启动后，打开浏览器并访问 http://${ip}:80/
+nginx正常启动后，打开浏览器并访问 `http://${ip}:80/`
 
 ### 1.4.5. 本地修改调试
 
@@ -184,9 +184,8 @@ service docker start
 ```
 
 ## 2.2. <a id="chapter-2"></a> 部署docker环境
-执行Meits/docker/start.sh ${本机ip},等待部署完成
-
-部署完成后,可以通过浏览器直接访问:http://${IP}
-
-
-
+执行部署文件
+```
+Meits/docker/start.sh ${IP}
+```
+等待部署完成后,可以通过浏览器直接访问: `http://${IP}`
