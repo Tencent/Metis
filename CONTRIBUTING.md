@@ -35,4 +35,4 @@
 6. 然后，你可以提交你的代码到 `dev` 分支。
 
 ## 代码协议
-[BSD 3-Clause License](https://github.com/Tencent/Metis/master/LICENSE.TXT) 为Metis的开源协议，您贡献的代码也会受此协议保护。
+[BSD 3-Clause License](https://github.com/Tencent/Metis/blob/master/LICENSE.TXT) 为Metis的开源协议，您贡献的代码也会受此协议保护。

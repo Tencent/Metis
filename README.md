@@ -46,7 +46,7 @@ Metis的开源协议为BSD 3-Clause License，详情参见 [LICENSE.TXT](LICENSE
 
 ## 贡献代码
 
-如果您使用过程中发现问题，请通过 [https://github.com/Tencent/Metis/issues](issues) 来提交并描述相关的问题，您也可以在这里查看其它的 issue ，通过解决这些 issue 来贡献代码。
+如果您使用过程中发现问题，请通过 [https://github.com/Tencent/Metis/issues](https://github.com/Tencent/Metis/issues) 来提交并描述相关的问题，您也可以在这里查看其它的 issue ，通过解决这些 issue 来贡献代码。
 
 如果您是第一次贡献代码，请阅读 [CONTRIBUTING](CONTRIBUTING.md) 了解我们的贡献流程，并提交 pull request 给我们。
 

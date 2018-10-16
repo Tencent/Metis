@@ -46,7 +46,7 @@ Metis is based on the BSD 3-Clause License, see for details: [LICENSE.TXT](LICEN
 
 ## Contributing
 
-If you find a problem during use, please submit and describe via [https://github.com/Tencent/Metis/issues](issues) , you can also view other issues here and contribute code by resolving these issues.
+If you find a problem during use, please submit and describe via [https://github.com/Tencent/Metis/issues](https://github.com/Tencent/Metis/issues) , you can also view other issues here and contribute code by resolving these issues.
 
 If you are contributing your code for the first time, please read [CONTRIBUTING](CONTRIBUTING.md) to learn about our contribution process.
 
