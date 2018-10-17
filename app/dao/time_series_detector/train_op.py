@@ -31,6 +31,7 @@ class TrainOperation(object):
         task_id = data['taskId']
         task_status = data['taskStatus']
         beg_limit = (item_per_page * (request_page - 1))
+        source = data['source']
         limit = item_per_page
         params = []
         query_str = ""
@@ -39,6 +40,9 @@ class TrainOperation(object):
             params.append(("%" + task_id + "%").encode('utf8'))
             params.append(("%" + task_id + "%").encode('utf8'))
             query_str += " and (task_id like %s or model_name like %s) "
+        if source != "":
+            params.append("%" + source + "%")
+            query_str += " and (source like %s) "
         if begin_time != "" and end_time != "":
             params.append(begin_time)
             params.append(end_time)
