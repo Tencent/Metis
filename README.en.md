@@ -50,6 +50,8 @@ If you find a problem during use, please submit and describe via [https://github
 
 If you are contributing your code for the first time, please read [CONTRIBUTING](CONTRIBUTING.md) to learn about our contribution process.
 
+Join our [Tencent OpenSource Plan](https://opensource.tencent.com/contribution).
+
 ## Contact Information
 
 QQ technology exchange group: 288723616.

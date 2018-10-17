@@ -1,4 +1,4 @@
-FROM sherlockren/metis-full
+FROM zhiyunmetis/metis-full
 WORKDIR /metis
 ADD . /metis
 EXPOSE 80

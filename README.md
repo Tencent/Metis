@@ -50,6 +50,8 @@ Metis的开源协议为BSD 3-Clause License，详情参见 [LICENSE.TXT](LICENSE
 
 如果您是第一次贡献代码，请阅读 [CONTRIBUTING](CONTRIBUTING.md) 了解我们的贡献流程，并提交 pull request 给我们。
 
+[腾讯开源激励计划](https://opensource.tencent.com/contribution) 鼓励开发者的参与和贡献，期待你的加入。
+
 ## 联系方式
 
 qq技术交流群1群：288723616。
