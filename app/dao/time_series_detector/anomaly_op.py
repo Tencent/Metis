@@ -114,8 +114,7 @@ class AbnormalOperation(object):
 
     def insert_anomaly(self, data):
         insert_str = "INSERT INTO anomaly(view_id, view_name, attr_name, attr_id, time, data_c, data_b, data_a) values(%s, %s, %s, %s, %s, %s, %s, %s);"
-        time_str = datetime.datetime.fromtimestamp(int(time.time())).strftime("%Y-%m-%d %H:%M:%S")
-        params = [data['view_id'], data['view_name'].encode('utf8'), data['attr_name'].encode('utf8'), data['attr_id'], time_str, data['data_c'], data['data_b'], data['data_a']]
+        params = [data['view_id'], data['view_name'].encode('utf8'), data['attr_name'].encode('utf8'), data['attr_id'], data['time'], data['data_c'], data['data_b'], data['data_a']]
         record_num = self.__cur.execute(insert_str, params)
         self.__conn.commit()
         return OP_SUCCESS, record_num
