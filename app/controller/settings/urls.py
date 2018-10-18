@@ -18,7 +18,6 @@ from django.contrib import admin
 from api import views as api_views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
     url(r'^SearchAnomaly$', api_views.search_anomaly, name='search_anomaly'),
     url(r'^ImportSample$', api_views.import_sample, name='import_sample'),
     url(r'^UpdateSample$', api_views.update_sample, name='update_sample'),
