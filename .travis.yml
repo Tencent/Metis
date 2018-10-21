@@ -2,9 +2,13 @@ language: python
  
 python:
     - "2.7"
+    - "3.6"
 
 node_js: "8"
 
+matrix:
+    allow_failures:
+        - python: "3.6"
 
 install:
     - pip install tsfresh==0.11.1
