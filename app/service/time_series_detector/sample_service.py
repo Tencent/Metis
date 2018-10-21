@@ -28,7 +28,7 @@ class SampleService(object):
         try:
             ret_code, ret_data = self.__sample.import_sample(data)
             return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -70,7 +70,7 @@ class SampleService(object):
                 elif row[6] == "negative":
                     negative_count = negative_count + 1
                 count = count + 1
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(FILE_FORMAT_ERR, str(ex))
             return return_dict
@@ -88,7 +88,7 @@ class SampleService(object):
             if OP_SUCCESS == ret_code:
                 ret_code, ret_data = self.__sample.update_sample(form)
             return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -100,7 +100,7 @@ class SampleService(object):
             if OP_SUCCESS == ret_code:
                 ret_code, ret_data = self.__sample.query_sample(form)
             return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -111,7 +111,7 @@ class SampleService(object):
             if len(body) > VALUE_LEN_MAX:
                 return ""
             ret_data = self.__sample.download_sample(body)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             ret_data = build_ret_data(THROW_EXP, str(ex))
         return ret_data
@@ -123,7 +123,7 @@ class SampleService(object):
             if OP_SUCCESS == ret_code:
                 ret_code, ret_data = self.__sample.delete_sample(form)
             return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -135,7 +135,7 @@ class SampleService(object):
             if OP_SUCCESS == ret_code:
                 ret_code, ret_data = self.__sample.sample_count(form)
             return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -144,7 +144,7 @@ class SampleService(object):
         try:
             ret_code, ret_data = self.__sample.query_sample_source()
             return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict

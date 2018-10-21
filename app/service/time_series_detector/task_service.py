@@ -27,7 +27,7 @@ class TrainService(object):
             if OP_SUCCESS == ret_code:
                 ret_code, ret_data = self.__train_op.query_train(form)
             return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -36,7 +36,7 @@ class TrainService(object):
         try:
             ret_code, ret_data = self.__train_op.query_train_source()
             return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -48,7 +48,7 @@ class TrainService(object):
             if OP_SUCCESS == ret_code:
                 ret_code, ret_data = self.__train_op.delete_train(form)
             return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict

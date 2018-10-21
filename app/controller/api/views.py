@@ -17,7 +17,7 @@ def search_anomaly(request):
         try:
             anomaly_service = AnomalyService()
             return_dict = anomaly_service.query_anomaly(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -30,7 +30,7 @@ def import_sample(request):
         try:
             sample_service = SampleService()
             return_dict = sample_service.import_file(request.FILES)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -43,7 +43,7 @@ def update_sample(request):
         try:
             sample_service = SampleService()
             return_dict = sample_service.update_sample(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -56,7 +56,7 @@ def query_sample(request):
         try:
             sample_service = SampleService()
             return_dict = sample_service.query_sample(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -69,7 +69,7 @@ def update_anomaly(request):
         try:
             sample_service = AnomalyService()
             return_dict = sample_service.update_anomaly(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -82,7 +82,7 @@ def train(request):
         try:
             detect_service = DetectService()
             return_dict = detect_service.process_train(json.loads(request.body))
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -100,7 +100,7 @@ def download_sample(request):
             response['Content-Type'] = 'application/octet-stream'
             response['Content-Disposition'] = 'attachment;filename = "SampleExport.csv"'
             return response
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -113,7 +113,7 @@ def predict_rate(request):
         try:
             detect_service = DetectService()
             return_dict = detect_service.rate_predict(json.loads(request.body))
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -126,7 +126,7 @@ def predict_value(request):
         try:
             detect_service = DetectService()
             return_dict = detect_service.value_predict(json.loads(request.body))
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -139,7 +139,7 @@ def query_train_task(request):
         try:
             train_service = TrainService()
             return_dict = train_service.query_train(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -152,7 +152,7 @@ def query_train_source(request):
         try:
             sample_service = SampleService()
             return_dict = sample_service.query_sample_source()
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -165,7 +165,7 @@ def delete_train_task(request):
         try:
             train_service = TrainService()
             return_dict = train_service.delete_train(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -178,7 +178,7 @@ def delete_sample(request):
         try:
             sample_service = SampleService()
             return_dict = sample_service.delete_sample(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:
@@ -191,7 +191,7 @@ def count_sample(request):
         try:
             sample_service = SampleService()
             return_dict = sample_service.count_sample(request.body)
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:

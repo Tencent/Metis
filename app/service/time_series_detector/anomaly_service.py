@@ -7,6 +7,7 @@ Licensed under the BSD 3-Clause License (the "License"); you may not use this fi
 https://opensource.org/licenses/BSD-3-Clause
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 """
+from __future__ import print_function
 
 import json
 import traceback
@@ -26,7 +27,7 @@ class AnomalyService(object):
             if OP_SUCCESS == ret_code:
                 ret_code, ret_data = self.__anomaly.get_anomaly(form)
             return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
@@ -36,11 +37,11 @@ class AnomalyService(object):
             form = json.loads(body)
             ret_code, ret_data = check_value(form)
             if OP_SUCCESS == ret_code:
-                print form
+                print(form)
                 ret_code, ret_data = self.__anomaly.update_anomaly(form)
             return_dict = build_ret_data(ret_code, ret_data)
 
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(THROW_EXP, str(ex))
         return return_dict
