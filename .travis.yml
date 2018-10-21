@@ -14,7 +14,7 @@ install:
     - pip install tsfresh==0.11.1
     - pip install django==1.11.13
     - pip install pylint
-    - pip install mysql-python
+    - pip install mysqlclient
     - pip install scikit-learn
     - npm install
 
