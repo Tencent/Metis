@@ -79,7 +79,7 @@ port = 3306
 
 ## 1.3. <a id="chapter-1-3"></a>服务端环境安装
 
-服务端python程序需要依赖django、numpy、tsfresh、MySQL-python、scikit-learn、scikit-learn等包
+服务端python程序需要依赖django、numpy、tsfresh、MySQL-python、scikit-learn等包
 
 ### 1.3.1. yum 安装依赖包
 
@@ -186,6 +186,6 @@ service docker start
 ## 2.2. <a id="chapter-2"></a> 部署docker环境
 执行部署文件
 ```
-Meits/docker/start.sh ${IP}
+Metis/docker/start.sh ${IP}
 ```
 等待部署完成后,可以通过浏览器直接访问: `http://${IP}`
