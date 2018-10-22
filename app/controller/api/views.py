@@ -4,6 +4,7 @@ import json
 from django.shortcuts import render
 from django.http import FileResponse
 from common.render import render_json
+from functools import wraps
 from app.service.time_series_detector.anomaly_service import *
 from app.service.time_series_detector.sample_service import *
 from app.service.time_series_detector.task_service import *
@@ -11,90 +12,58 @@ from app.service.time_series_detector.detect_service import *
 from app.config.errorcode import *
 from app.utils.utils import *
 
+def check_post(func):
+    @wraps(func)
+    def f(request):
+        if request.method == "POST":
+            return_dict = func(request)
+        else:
+            return_dict = build_ret_data(NOT_POST)
+        return render_json(return_dict)
+    return f
 
+ 
+@check_post
 def search_anomaly(request):
-    if request.method == "POST":
-        try:
-            anomaly_service = AnomalyService()
-            return_dict = anomaly_service.query_anomaly(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    anomaly_service = AnomalyService()
+    return anomaly_service.query_anomaly(request.body)
 
 
+@check_post
 def import_sample(request):
-    if request.method == "POST":
-        try:
-            sample_service = SampleService()
-            return_dict = sample_service.import_file(request.FILES)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    sample_service = SampleService()
+    return sample_service.import_file(request.FILES)
 
 
+@check_post
 def update_sample(request):
-    if request.method == "POST":
-        try:
-            sample_service = SampleService()
-            return_dict = sample_service.update_sample(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    sample_service = SampleService()
+    return sample_service.update_sample(request.body)
 
 
+@check_post
 def query_sample(request):
-    if request.method == "POST":
-        try:
-            sample_service = SampleService()
-            return_dict = sample_service.query_sample(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    sample_service = SampleService()
+    return sample_service.query_sample(request.body)
 
 
+@check_post
 def update_anomaly(request):
-    if request.method == "POST":
-        try:
-            sample_service = AnomalyService()
-            return_dict = sample_service.update_anomaly(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    sample_service = AnomalyService()
+    return sample_service.update_anomaly(request.body)
 
 
+@check_post
 def train(request):
-    if request.method == "POST":
-        try:
-            detect_service = DetectService()
-            return_dict = detect_service.process_train(json.loads(request.body))
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    detect_service = DetectService()
+    return detect_service.process_train(json.loads(request.body))
 
 
 def download_sample(request):
     if request.method == "GET":
         try:
             sample_service = SampleService()
-            file_name = sample_service.sample_download(request.GET['id'])
+            ret_code, file_name = sample_service.sample_download(request.GET['id'])
             files = open(file_name, 'rb')
             response = FileResponse(files)
             response['Content-Type'] = 'application/octet-stream'
@@ -108,92 +77,43 @@ def download_sample(request):
     return render_json(return_dict)
 
 
+@check_post
 def predict_rate(request):
-    if request.method == "POST":
-        try:
-            detect_service = DetectService()
-            return_dict = detect_service.rate_predict(json.loads(request.body))
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    detect_service = DetectService()
+    return detect_service.rate_predict(json.loads(request.body))
 
 
+@check_post
 def predict_value(request):
-    if request.method == "POST":
-        try:
-            detect_service = DetectService()
-            return_dict = detect_service.value_predict(json.loads(request.body))
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    detect_service = DetectService()
+    return detect_service.value_predict(json.loads(request.body))
 
 
+@check_post
 def query_train_task(request):
-    if request.method == "POST":
-        try:
-            train_service = TrainService()
-            return_dict = train_service.query_train(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    train_service = TrainService()
+    return train_service.query_train(request.body)
 
 
+@check_post
 def query_train_source(request):
-    if request.method == "POST":
-        try:
-            sample_service = SampleService()
-            return_dict = sample_service.query_sample_source()
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    sample_service = SampleService()
+    return sample_service.query_sample_source(request.body)
 
 
+@check_post
 def delete_train_task(request):
-    if request.method == "POST":
-        try:
-            train_service = TrainService()
-            return_dict = train_service.delete_train(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    train_service = TrainService()
+    return train_service.delete_train(request.body)
 
 
+@check_post
 def delete_sample(request):
-    if request.method == "POST":
-        try:
-            sample_service = SampleService()
-            return_dict = sample_service.delete_sample(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    sample_service = SampleService()
+    return sample_service.delete_sample(request.body)
 
 
+@check_post
 def count_sample(request):
-    if request.method == "POST":
-        try:
-            sample_service = SampleService()
-            return_dict = sample_service.count_sample(request.body)
-        except Exception, ex:
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-            return render_json(return_dict)
-    else:
-        return_dict = build_ret_data(NOT_POST)
-    return render_json(return_dict)
+    sample_service = SampleService()
+    return sample_service.count_sample(request.body)

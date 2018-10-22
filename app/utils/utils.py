@@ -9,6 +9,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 import numpy as np
+import traceback
+import json
+from functools import wraps
 from app.config.errorcode import *
 from app.config.common import *
 
@@ -85,77 +88,15 @@ def build_ret_data(ret_code, data=""):
     return {"code": ret_code, "msg": ERR_CODE[ret_code], "data": data}
 
 
-def validate_value(data):
-    if isinstance(data, unicode):
-        if len(data) > INPUT_LEN_ENG_MAX:
-            return CHECK_PARAM_FAILED
-    elif isinstance(data, str):
-        if len(data) > INPUT_LEN_ENG_MAX:
-            return CHECK_PARAM_FAILED
-    elif isinstance(data, list):
-        if len(data) > INPUT_LIST_LEN_MAX:
-            return CHECK_PARAM_FAILED
-        for item in data:
-            ret_code = validate_value(item)
-            if ret_code != 0:
-                return ret_code
-    return 0
-
-
-def check_value(data):
-    if 'attrId' in data:
-        ret_code = validate_value(data['attrId'])
-        if ret_code != 0:
-            return CHECK_PARAM_FAILED, "attrId too long"
-    if 'attrName' in data:
-        ret_code = validate_value(data['attrName'])
-        if ret_code != 0:
-            return CHECK_PARAM_FAILED, "attrName too long"
-    if 'viewId' in data:
-        ret_code = validate_value(data['viewId'])
-        if ret_code != 0:
-            return CHECK_PARAM_FAILED, "viewId too long"
-    if 'viewName' in data:
-        ret_code = validate_value(data['viewName'])
-        if ret_code != 0:
-            return CHECK_PARAM_FAILED, "viewName too long"
-    if 'itemPerPage' in data:
-        if data['itemPerPage'] > INPUT_ITEM_PER_PAGE_MAX:
-            return CHECK_PARAM_FAILED, "itemPerPage too big"
-    if 'beginTime' in data:
-        if len(str(data['beginTime'])) > INPUT_LEN_ENG_MAX:
-            return CHECK_PARAM_FAILED, "beginTime too long"
-    if 'endTime' in data:
-        if len(str(data['endTime'])) > INPUT_LEN_ENG_MAX:
-            return CHECK_PARAM_FAILED, "endTime too long"
-    if 'updateTime' in data:
-        if len(str(data['updateTime'])) > INPUT_LEN_ENG_MAX:
-            return CHECK_PARAM_FAILED, "updateTime too long"
-    if 'source' in data:
-        ret_code = validate_value(data['source'])
-        if ret_code != 0:
-            return CHECK_PARAM_FAILED, "source too long"
-    if 'trainOrTest' in data:
-        ret_code = validate_value(data['source'])
-        if ret_code != 0:
-            return CHECK_PARAM_FAILED, "trainOrTest too long"
-    if 'positiveOrNegative' in data:
-        ret_code = validate_value(data['positiveOrNegative'])
-        if ret_code != 0:
-            return CHECK_PARAM_FAILED, "positiveOrNegative too long"
-    if 'window' in data:
-        if len(str(data['window'])) > INPUT_LEN_ENG_MAX:
-            return CHECK_PARAM_FAILED, "window"
-    if 'dataTime' in data:
-        if len(str(data['dataTime'])) > INPUT_LEN_ENG_MAX:
-            return CHECK_PARAM_FAILED, "dataTime too long"
-    if 'dataC' in data:
-        if len(str(data['dataC'])) > VALUE_LEN_MAX:
-            return CHECK_PARAM_FAILED, "dataC too long"
-    if 'dataB' in data:
-        if len(str(data['dataB'])) > VALUE_LEN_MAX:
-            return CHECK_PARAM_FAILED, "dataB too long"
-    if 'dataA' in data:
-        if len(str(data['dataA'])) > VALUE_LEN_MAX:
-            return CHECK_PARAM_FAILED, "dataA too long"
-    return 0, ""
+def exce_service(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            ret_code, ret_data = func(*args, **kwargs)
+            return_dict = build_ret_data(ret_code, ret_data)
+        except Exception, ex:
+            traceback.print_exc()
+            return_dict = build_ret_data(THROW_EXP, str(ex))
+        return return_dict
+    return wrapper
+    

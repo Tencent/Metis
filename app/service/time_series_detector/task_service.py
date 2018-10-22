@@ -9,7 +9,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 import json
-import traceback
 from app.dao.time_series_detector.train_op import *
 from app.config.errorcode import *
 from app.utils.utils import *
@@ -20,35 +19,10 @@ class TrainService(object):
     def __init__(self):
         self.__train_op = TrainOperation()
 
+    @exce_service
     def query_train(self, body):
-        try:
-            form = json.loads(body)
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                ret_code, ret_data = self.__train_op.query_train(form)
-            return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__train_op.query_train(json.loads(body))
 
-    def query_train_source(self):
-        try:
-            ret_code, ret_data = self.__train_op.query_train_source()
-            return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
-
+    @exce_service
     def delete_train(self, body):
-        try:
-            form = json.loads(body)
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                ret_code, ret_data = self.__train_op.delete_train(form)
-            return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__train_op.delete_train(json.loads(body))

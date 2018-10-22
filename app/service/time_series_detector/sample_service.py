@@ -24,14 +24,9 @@ class SampleService(object):
         uuid_str = uuid.uuid4().hex[:8]
         self.__upload_file_path = UPLOAD_PATH % uuid_str
 
+    @exce_service
     def import_sample(self, data):
-        try:
-            ret_code, ret_data = self.__sample.import_sample(data)
-            return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__sample.import_sample(data)
 
     def import_file(self, file_data):
         try:
@@ -61,9 +56,6 @@ class SampleService(object):
                             "updateTime": int(row[11]),
                             "time": int(row[11]),
                             "anomalyId": "0"}
-                check_code, check_msg = check_value(one_item)
-                if OP_SUCCESS != check_code:
-                    return build_ret_data(check_code, check_msg)
                 data.append(one_item)
                 if row[6] == "positive":
                     positive_count = positive_count + 1
@@ -81,70 +73,33 @@ class SampleService(object):
             import_ret["data"] = ret_data
         return import_ret
 
+    @exce_service
     def update_sample(self, body):
-        try:
-            form = json.loads(body)
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                ret_code, ret_data = self.__sample.update_sample(form)
-            return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__sample.update_sample(json.loads(body))
 
+    @exce_service
     def query_sample(self, body):
-        try:
-            form = json.loads(body)
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                ret_code, ret_data = self.__sample.query_sample(form)
-            return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__sample.query_sample(json.loads(body))
 
     def sample_download(self, body):
         ret_data = ""
         try:
             if len(body) > VALUE_LEN_MAX:
                 return ""
-            ret_data = self.__sample.download_sample(body)
+            ret_code, ret_data = self.__sample.download_sample(body)
         except Exception, ex:
             traceback.print_exc()
             ret_data = build_ret_data(THROW_EXP, str(ex))
-        return ret_data
+        return ret_code, ret_data
 
+    @exce_service
     def delete_sample(self, body):
-        try:
-            form = json.loads(body)
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                ret_code, ret_data = self.__sample.delete_sample(form)
-            return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__sample.delete_sample(json.loads(body))
 
+    @exce_service
     def count_sample(self, body):
-        form = json.loads(body)
-        try:
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                ret_code, ret_data = self.__sample.sample_count(form)
-            return_dict = build_ret_data(ret_code, {"count": ret_data})
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__sample.sample_count(json.loads(body))
 
-    def query_sample_source(self):
-        try:
-            ret_code, ret_data = self.__sample.query_sample_source()
-            return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+    @exce_service
+    def query_sample_source(self, body):
+        return self.__sample.query_sample_source()

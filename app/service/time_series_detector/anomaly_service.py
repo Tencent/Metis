@@ -9,7 +9,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 import json
-import traceback
 from app.dao.time_series_detector.anomaly_op import *
 from app.utils.utils import *
 
@@ -19,28 +18,10 @@ class AnomalyService(object):
     def __init__(self):
         self.__anomaly = AbnormalOperation()
 
+    @exce_service
     def query_anomaly(self, body):
-        try:
-            form = json.loads(body)
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                ret_code, ret_data = self.__anomaly.get_anomaly(form)
-            return_dict = build_ret_data(ret_code, ret_data)
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__anomaly.get_anomaly(json.loads(body))
 
+    @exce_service
     def update_anomaly(self, body):
-        try:
-            form = json.loads(body)
-            ret_code, ret_data = check_value(form)
-            if OP_SUCCESS == ret_code:
-                print form
-                ret_code, ret_data = self.__anomaly.update_anomaly(form)
-            return_dict = build_ret_data(ret_code, ret_data)
-
-        except Exception, ex:
-            traceback.print_exc()
-            return_dict = build_ret_data(THROW_EXP, str(ex))
-        return return_dict
+        return self.__anomaly.update_anomaly(json.loads(body))

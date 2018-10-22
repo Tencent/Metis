@@ -193,9 +193,6 @@ class DetectService(object):
         return build_ret_data(OP_SUCCESS, ret_data)
 
     def rate_predict(self, data):
-        ret_code, ret_data = check_value(data)
-        if ret_code != OP_SUCCESS:
-            return build_ret_data(ret_code, ret_data)
         combined_data = data["dataC"] + "," + data["dataB"] + "," + data["dataA"]
         time_series = map(float, combined_data.split(','))
         statistic_result = self.statistic_obj.predict(time_series)

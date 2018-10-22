@@ -153,7 +153,7 @@ class SampleOperation(object):
                 "negative_count": int(row[2])
             })
 
-        return OP_SUCCESS, sample_list
+        return OP_SUCCESS, {"count": sample_list}
 
     def download_sample(self, data):
         sample_list = []
@@ -185,7 +185,7 @@ class SampleOperation(object):
             writer = csv.writer(pfile)
             writer.writerow(head)
             writer.writerows(sample_list)
-        return download_file_path
+        return 0, download_file_path
 
     def query_sample(self, data):
         item_per_page = data['itemPerPage']
@@ -261,7 +261,7 @@ class SampleOperation(object):
         command = "delete from sample_dataset where id = %s "
         num = self.__cur.execute(command, id_num)
         self.__conn.commit()
-        return OP_SUCCESS, num
+        return OP_SUCCESS, {"count":num}
 
     def delete_sample_by_anomaly_id(self, data):
         id_num = data['id']
