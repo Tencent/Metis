@@ -191,7 +191,7 @@ class SampleOperation(object):
         item_per_page = data['itemPerPage']
         request_page = data['requestPage']
         beg_limit = (item_per_page * (request_page - 1))
-        limit = (item_per_page)
+        limit = item_per_page
         params = []
         query_str = ""
 

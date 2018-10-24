@@ -19,9 +19,11 @@ class FeatureTestCase(DataTestCase):
         self.assertTrue(time_series_maximum(testdata_a) == 1020900)
         self.assertTrue(time_series_minimum(testdata_a) == 824757)
         self.assertTrue((time_series_mean(testdata_a) - 919324.34) < 1e-2)
+
     def test_two(self):
         x = "hello"
         assert 'hello' in x
+
 
 if __name__ == '__main__':
     a = FeatureTestCase()

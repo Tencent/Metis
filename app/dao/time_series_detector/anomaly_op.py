@@ -81,7 +81,7 @@ class AbnormalOperation(object):
     def update_anomaly(self, data):
         update_str = "UPDATE anomaly set mark_flag = %s where id = %s"
         params = [data['markFlag'], data['id']]
-        record_num = self.__cur.execute(update_str, params)
+        self.__cur.execute(update_str, params)
         self.__conn.commit()
 
         if MARK_NEGATIVE == data['markFlag'] or MARK_POSITIVE == data['markFlag']:

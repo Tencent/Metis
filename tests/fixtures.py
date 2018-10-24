@@ -11,6 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 from unittest import TestCase
 import random
 
+
 class DataTestCase(TestCase):
     def create_test_data_a(self):
         return [850600,889768,883237,896313,870407,868385,865300,889802,894983,836835,937571,904475,892846,878769,886624,892638,894804,889133,908860,

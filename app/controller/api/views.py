@@ -12,6 +12,7 @@ from app.service.time_series_detector.detect_service import *
 from app.config.errorcode import *
 from app.utils.utils import *
 
+
 def check_post(func):
     @wraps(func)
     def f(request):
@@ -69,7 +70,7 @@ def download_sample(request):
             response['Content-Type'] = 'application/octet-stream'
             response['Content-Disposition'] = 'attachment;filename = "SampleExport.csv"'
             return response
-        except Exception, ex:
+        except Exception as ex:
             return_dict = build_ret_data(THROW_EXP, str(ex))
             return render_json(return_dict)
     else:

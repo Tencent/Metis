@@ -82,7 +82,7 @@ class Gbdt(object):
             grd.fit(X_train, y_train)
             model_name = MODEL_PATH + task_id + "_model"
             joblib.dump(grd, model_name)
-        except Exception, ex:
+        except Exception as ex:
             return TRAIN_ERR, str(ex)
         return OP_SUCCESS, ""
 
