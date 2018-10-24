@@ -12,6 +12,7 @@ from tests.fixtures import DataTestCase
 from app.config.common import *
 from app.utils.utils import *
 
+
 class CommonTestCase(DataTestCase):
 
     def test_check_value(self):

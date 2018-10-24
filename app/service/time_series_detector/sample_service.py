@@ -62,7 +62,7 @@ class SampleService(object):
                 elif row[6] == "negative":
                     negative_count = negative_count + 1
                 count = count + 1
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             return_dict = build_ret_data(FILE_FORMAT_ERR, str(ex))
             return return_dict
@@ -82,12 +82,12 @@ class SampleService(object):
         return self.__sample.query_sample(json.loads(body))
 
     def sample_download(self, body):
-        ret_data = ""
+        ret_code = 1000
         try:
             if len(body) > VALUE_LEN_MAX:
                 return ""
             ret_code, ret_data = self.__sample.download_sample(body)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc()
             ret_data = build_ret_data(THROW_EXP, str(ex))
         return ret_code, ret_data

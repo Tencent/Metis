@@ -74,7 +74,7 @@ class XGBoosting(object):
         """
         try:
             f = open(feature_file_name, "w")
-        except Exception, ex:
+        except Exception as ex:
             return CAL_FEATURE_ERR, str(ex)
         times = 0
         for temp in data:
@@ -104,7 +104,7 @@ class XGBoosting(object):
                 features.append(temp)
         try:
             ret_code, ret_data = self.__save_libsvm_format(features, feature_file_name)
-        except Exception, ex:
+        except Exception as ex:
             ret_code = CAL_FEATURE_ERR
             ret_data = str(ex)
         return ret_code, ret_data
@@ -124,7 +124,7 @@ class XGBoosting(object):
             return ret_code, ret_data
         try:
             dtrain = xgb.DMatrix(feature_file_name)
-        except Exception, ex:
+        except Exception as ex:
             return READ_FEATURE_FAILED, str(ex)
         params = {
             'max_depth': self.max_depth,
@@ -141,7 +141,7 @@ class XGBoosting(object):
         try:
             bst = xgb.train(params, dtrain, num_round)
             bst.save_model(model_name)
-        except Exception, ex:
+        except Exception as ex:
             return TRAIN_ERR, str(ex)
         return OP_SUCCESS, ""
 
