@@ -10,7 +10,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import time
 import os
-from multiprocessing import Process
+import threading
 from app.dao.time_series_detector import anomaly_op
 from app.dao.time_series_detector import sample_op
 from app.dao.time_series_detector import train_op
@@ -99,8 +99,9 @@ class DetectService(object):
             return build_ret_data(LACK_SAMPLE, "")
         train_op_obj.insert_train_info(train_params)
         try:
-            process = Process(target=self.__generate_model, args=(samples_list, task_id, ))
-            process.start()
+            t = threading.Thread(target=self.__generate_model, args=(samples_list, task_id, ))
+            t.setDaemon(False)
+            t.start()
         except Exception:
             train_status = "failed"
             params = {

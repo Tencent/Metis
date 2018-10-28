@@ -18,11 +18,11 @@
 
 | 软件  | 软件要求 |
 | ---  | ---  |
-| linux内核版本:| CentOS 7.4 |
+| linux发行版:| CentOS 7.4 |
 | python版本:| 2.7版本|
 | MySQL版本:| 5.6.26及以上版本|
 | Node.js版本:| 8.11.1及以上版本|s
-| Django版本:| 1.11.13及以上版本|
+| Django版本:| 1.x.x 版本|
 
 运行服务器要求：1台普通安装linux系统的机器即可（推荐CentOS系统），服务器需要开放80和8080端口
 
@@ -46,7 +46,7 @@ systemctl start mariadb
 1、创建需要的数据库用户名并授权，连接MySQL客户端并执行
 
 ```
-   grant all privileges on *.* to metis@127.0.0.1  identified by 'metis@123';
+   grant all privileges on metis.* to metis@127.0.0.1  identified by 'metis@123';
    flush privileges;
 ```
    
