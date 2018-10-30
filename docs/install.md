@@ -106,17 +106,16 @@ export PYTHONPATH=/data/Metis:$PYTHONPATH
 
 为了保证下次登陆可以导入环境变量,请将环境变量配置写入服务器的`/etc/profile`文件中
 
-### 1.3.4. 部署Django服务端
 
-部署生产环境时可通过nginx和uwsgi部署，具体请参考对应官网说明
-
-### 1.3.5. 启动服务端
+### 1.3.4. 启动服务端
 
 启动服务端程序
 
 ```
 python /data/Metis/app/controller/manage.py runserver {ip}:{port}
 ```
+
+此启动模式为Django的调试模式。如果需要部署生产环境，可通过nginx和uwsgi部署，具体请参考对应官网说明
 
 ## 1.4. <a id="chapter-1-4"></a>WEB管理端环境安装
 
