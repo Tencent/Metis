@@ -410,37 +410,38 @@ def time_series_range(x):
 
 
 def get_statistical_features(x):
-    statistical_features = []
-    statistical_features.append(time_series_maximum(x))
-    statistical_features.append(time_series_minimum(x))
-    statistical_features.append(time_series_mean(x))
-    statistical_features.append(time_series_variance(x))
-    statistical_features.append(time_series_standard_deviation(x))
-    statistical_features.append(time_series_skewness(x))
-    statistical_features.append(time_series_kurtosis(x))
-    statistical_features.append(time_series_median(x))
-    statistical_features.append(time_series_abs_energy(x))
-    statistical_features.append(time_series_absolute_sum_of_changes(x))
-    statistical_features.append(time_series_variance_larger_than_std(x))
-    statistical_features.append(time_series_count_above_mean(x))
-    statistical_features.append(time_series_count_below_mean(x))
-    statistical_features.append(time_series_first_location_of_maximum(x))
-    statistical_features.append(time_series_first_location_of_minimum(x))
-    statistical_features.append(time_series_last_location_of_maximum(x))
-    statistical_features.append(time_series_last_location_of_minimum(x))
-    statistical_features.append(int(time_series_has_duplicate(x)))
-    statistical_features.append(int(time_series_has_duplicate_max(x)))
-    statistical_features.append(int(time_series_has_duplicate_min(x)))
-    statistical_features.append(time_series_longest_strike_above_mean(x))
-    statistical_features.append(time_series_longest_strike_below_mean(x))
-    statistical_features.append(time_series_mean_abs_change(x))
-    statistical_features.append(time_series_mean_change(x))
-    statistical_features.append(time_series_percentage_of_reoccurring_datapoints_to_all_datapoints(x))
-    statistical_features.append(time_series_ratio_value_number_to_time_series_length(x))
-    statistical_features.append(time_series_sum_of_reoccurring_data_points(x))
-    statistical_features.append(time_series_sum_of_reoccurring_values(x))
-    statistical_features.append(time_series_sum_values(x))
-    statistical_features.append(time_series_range(x))
+    statistical_features = [
+        time_series_maximum(x),
+        time_series_minimum(x),
+        time_series_mean(x),
+        time_series_variance(x),
+        time_series_standard_deviation(x),
+        time_series_skewness(x),
+        time_series_kurtosis(x),
+        time_series_median(x),
+        time_series_abs_energy(x),
+        time_series_absolute_sum_of_changes(x),
+        time_series_variance_larger_than_std(x),
+        time_series_count_above_mean(x),
+        time_series_count_below_mean(x),
+        time_series_first_location_of_maximum(x),
+        time_series_first_location_of_minimum(x),
+        time_series_last_location_of_maximum(x),
+        time_series_last_location_of_minimum(x),
+        int(time_series_has_duplicate(x)),
+        int(time_series_has_duplicate_max(x)),
+        int(time_series_has_duplicate_min(x)),
+        time_series_longest_strike_above_mean(x),
+        time_series_longest_strike_below_mean(x),
+        time_series_mean_abs_change(x),
+        time_series_mean_change(x),
+        time_series_percentage_of_reoccurring_datapoints_to_all_datapoints(x),
+        time_series_ratio_value_number_to_time_series_length(x),
+        time_series_sum_of_reoccurring_data_points(x),
+        time_series_sum_of_reoccurring_values(x),
+        time_series_sum_values(x),
+        time_series_range(x)
+    ]
     # append yourself statistical features here...
 
     return statistical_features

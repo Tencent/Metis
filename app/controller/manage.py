@@ -22,6 +22,7 @@ def wait_child(signum, frame):
             raise
     print('handle SIGCHLD end')
 
+
 if __name__ == "__main__":
     signal.signal(signal.SIGCHLD, wait_child)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")

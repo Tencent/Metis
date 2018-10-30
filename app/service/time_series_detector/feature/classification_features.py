@@ -78,9 +78,10 @@ def time_series_binned_entropy(x):
 
 
 def get_classification_features(x):
-    classification_features = []
-    classification_features.append(time_series_autocorrelation(x))
-    classification_features.append(time_series_coefficient_of_variation(x))
+    classification_features = [
+        time_series_autocorrelation(x),
+        time_series_coefficient_of_variation(x)
+    ]
     classification_features.extend(time_series_binned_entropy(x))
     # append yourself classification features here...
 
