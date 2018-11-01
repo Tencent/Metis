@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import numpy as np
 from app.config.common import *
 
-`
+
 def time_series_moving_average(x):
     """
     Returns the difference between the last element of x and the smoothed value after Moving Average Algorithm
