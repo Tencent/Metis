@@ -142,11 +142,11 @@ class DetectService(object):
         else:
             window = DEFAULT_WINDOW
         if len(data['dataC'].split(',')) != (2 * window + 1):
-            return CHECK_PARAM_FAILED, "dataC is not long enough"
+            return CHECK_PARAM_FAILED, "dataC length does not match"
         if len(data['dataB'].split(',')) != (2 * window + 1):
-            return CHECK_PARAM_FAILED, "dataB is not long enough"
+            return CHECK_PARAM_FAILED, "dataB length does not match"
         if len(data['dataA'].split(',')) != (window + 1):
-            return CHECK_PARAM_FAILED, "dataA is not long enough"
+            return CHECK_PARAM_FAILED, "dataA length does not match"
         return OP_SUCCESS, ""
 
     def value_predict(self, data):
