@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
 Tencent is pleased to support the open source community by making Metis available.
@@ -16,7 +17,7 @@ from app.config.errorcode import *
 class TrainOperation(object):
 
     def __init__(self):
-        self.__conn = MySQLdb.connect(host=database.host, port=database.port, user=database.user, passwd=database.passwd, db=database.db)
+        self.__conn = MySQLdb.connect(host=database.HOST, port=database.PORT, user=database.USER, passwd=database.PASSWD, db=database.DB)
         self.__cur = self.__conn.cursor()
         self.__cur.execute("SET NAMES UTF8")
 

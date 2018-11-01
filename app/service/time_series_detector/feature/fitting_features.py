@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
 Tencent is pleased to support the open source community by making Metis available.
@@ -9,8 +9,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 import numpy as np
+from app.config.common import *
 
-
+`
 def time_series_moving_average(x):
     """
     Returns the difference between the last element of x and the smoothed value after Moving Average Algorithm
@@ -25,7 +26,7 @@ def time_series_moving_average(x):
     :return type: list with float
     """
     temp_list = []
-    for w in range(1, 50, 5):
+    for w in range(1, min(50, DEFAULT_WINDOW), 5):
         temp = np.mean(x[-w:])
         temp_list.append(temp)
     return list(np.array(temp_list) - x[-1])
@@ -45,7 +46,7 @@ def time_series_weighted_moving_average(x):
     :return type: list with float
     """
     temp_list = []
-    for w in range(1, 50, 5):
+    for w in range(1, min(50, DEFAULT_WINDOW), 5):
         w = min(len(x), w)  # avoid the case len(value_list) < w
         coefficient = np.array(range(1, w + 1))
         temp_list.append((np.dot(coefficient, x[-w:])) / (w * (w + 1) / 2))
@@ -167,7 +168,7 @@ def time_series_periodic_features(data_c_left, data_c_right, data_b_left, data_b
     Others are similar.
     '''
 
-    for w in range(1, 180, 30):
+    for w in range(1, DEFAULT_WINDOW, DEFAULT_WINDOW / 6):
         periodic_features.append(min(max(data_c_left[-w:]) - data_a[-1], 0))
         periodic_features.append(min(max(data_c_right[:w]) - data_a[-1], 0))
         periodic_features.append(min(max(data_b_left[-w:]) - data_a[-1], 0))
@@ -181,7 +182,7 @@ def time_series_periodic_features(data_c_left, data_c_right, data_b_left, data_b
     Add the difference of mean values between two subsequences
     '''
 
-    for w in range(1, 180, 20):
+    for w in range(1, DEFAULT_WINDOW, DEFAULT_WINDOW / 9):
         temp_value = np.mean(data_c_left[-w:]) - np.mean(data_a[-w:])
         periodic_features.append(abs(temp_value))
         if temp_value < 0:

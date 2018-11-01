@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
 Tencent is pleased to support the open source community by making Metis available.
@@ -22,7 +22,7 @@ class SampleService(object):
     def __init__(self):
         self.__sample = SampleOperation()
         uuid_str = uuid.uuid4().hex[:8]
-        self.__upload_file_path = UPLOAD_PATH % uuid_str
+        self.__upload_file_path = UPLOAD_FILE % uuid_str
 
     @exce_service
     def import_sample(self, data):
@@ -82,7 +82,7 @@ class SampleService(object):
         return self.__sample.query_sample(json.loads(body))
 
     def sample_download(self, body):
-        ret_code = 1000
+        ret_code = THROW_EXP
         try:
             if len(body) > VALUE_LEN_MAX:
                 return ""

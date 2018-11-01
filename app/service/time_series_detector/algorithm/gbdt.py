@@ -16,6 +16,8 @@ from sklearn.externals import joblib
 from app.service.time_series_detector.feature import feature_service
 from app.utils.utils import *
 from app.config.errorcode import *
+from app.config.common import *
+
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../../model/time_series_detector/')
 DEFAULT_MODEL = MODEL_PATH + "gbdt_default_model"
@@ -43,7 +45,7 @@ class Gbdt(object):
         self.max_depth = max_depth
         self.learning_rate = learning_rate
 
-    def __calculate_features(self, data, window=180):
+    def __calculate_features(self, data, window=DEFAULT_WINDOW):
         """
         Caculate time features.
 
@@ -59,7 +61,7 @@ class Gbdt(object):
                 features.append(temp)
         return features
 
-    def gbdt_train(self, data, task_id, window=180):
+    def gbdt_train(self, data, task_id, window=DEFAULT_WINDOW):
         """
         Train a gbdt model.
 
@@ -86,7 +88,7 @@ class Gbdt(object):
             return TRAIN_ERR, str(ex)
         return OP_SUCCESS, ""
 
-    def predict(self, X, window=180, model_name=DEFAULT_MODEL):
+    def predict(self, X, window=DEFAULT_WINDOW, model_name=DEFAULT_MODEL):
         """
         Predict if a particular sample is an outlier or not.
 

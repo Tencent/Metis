@@ -10,6 +10,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 from app.service.time_series_detector.algorithm import ewma
 from app.service.time_series_detector.algorithm import polynomial_interpolation
+from app.config.common import *
 
 
 class EwmaAndPolynomialInterpolation(object):
@@ -26,7 +27,7 @@ class EwmaAndPolynomialInterpolation(object):
         self.degree = degree
         self.threshold = threshold
 
-    def predict(self, X, window=180):
+    def predict(self, X, window=DEFAULT_WINDOW):
         """
         Predict if a particular sample is an outlier or not.
 

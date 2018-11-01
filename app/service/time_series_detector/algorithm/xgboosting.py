@@ -13,6 +13,7 @@ import xgboost as xgb
 from app.service.time_series_detector.feature import feature_service
 from app.utils.utils import *
 from app.config.errorcode import *
+from app.config.common import *
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../../model/time_series_detector/')
 DEFAULT_MODEL = MODEL_PATH + "xgb_default_model"
 
@@ -87,7 +88,7 @@ class XGBoosting(object):
             times = times + 1
         return OP_SUCCESS, ""
 
-    def __calculate_features(self, data, feature_file_name, window=180):
+    def __calculate_features(self, data, feature_file_name, window=DEFAULT_WINDOW):
         """
         Caculate time features and save as libsvm format.
 
@@ -145,7 +146,7 @@ class XGBoosting(object):
             return TRAIN_ERR, str(ex)
         return OP_SUCCESS, ""
 
-    def predict(self, X, window=180, model_name=DEFAULT_MODEL):
+    def predict(self, X, window=DEFAULT_WINDOW, model_name=DEFAULT_MODEL):
         """
         :param X: the time series to detect of
         :type X: pandas.Series

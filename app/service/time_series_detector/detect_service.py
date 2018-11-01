@@ -17,6 +17,7 @@ from app.dao.time_series_detector import train_op
 from app.utils.utils import *
 from app.service.time_series_detector.algorithm import isolation_forest, ewma, polynomial_interpolation, statistic, xgboosting
 from app.config.errorcode import *
+from app.config.common import *
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../model/time_series_detector/')
 
 
@@ -139,7 +140,7 @@ class DetectService(object):
         if "window" in data:
             window = data["window"]
         else:
-            window = 180
+            window = DEFAULT_WINDOW
         if len(data['dataC'].split(',')) != (2 * window + 1):
             return CHECK_PARAM_FAILED, "dataC is not long enough"
         if len(data['dataB'].split(',')) != (2 * window + 1):
@@ -166,7 +167,7 @@ class DetectService(object):
         if "window" in data:
             window = data["window"]
         else:
-            window = 180
+            window = DEFAULT_WINDOW
         statistic_result = self.statistic_obj.predict(time_series)
         ewma_result = self.ewma_obj.predict(time_series)
         polynomial_result = self.polynomial_obj.predict(time_series, window)

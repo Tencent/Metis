@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
 Tencent is pleased to support the open source community by making Metis available.
@@ -10,13 +10,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import numpy as np
 import traceback
-import json
 from functools import wraps
 from app.config.errorcode import *
 from app.config.common import *
 
 
-def is_standard_time_series(time_series, window=180):
+def is_standard_time_series(time_series, window=DEFAULT_WINDOW):
     """
     Check the length of time_series. If window = 180, then the length of time_series should be 903.
     The mean value of last window should be larger than 0.
@@ -30,7 +29,7 @@ def is_standard_time_series(time_series, window=180):
     return bool(len(time_series) == 5 * window + 3 and np.mean(time_series[(4 * window + 2):]) > 0)
 
 
-def split_time_series(time_series, window=180):
+def split_time_series(time_series, window=DEFAULT_WINDOW):
     """
     Spilt the time_series into five parts. Each has a length of window + 1
 

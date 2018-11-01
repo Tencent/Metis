@@ -9,6 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 from sklearn.ensemble import IsolationForest
+from app.config.common import *
 
 
 class IForest(object):
@@ -48,7 +49,7 @@ class IForest(object):
         self.random_state = random_state
         self.verbose = verbose
 
-    def predict(self, X, window=180):
+    def predict(self, X, window=DEFAULT_WINDOW):
         """
         Predict if a particular sample is an outlier or not.
 

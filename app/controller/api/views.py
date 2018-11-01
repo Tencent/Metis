@@ -23,7 +23,7 @@ def check_post(func):
         return render_json(return_dict)
     return f
 
- 
+
 @check_post
 def search_anomaly(request):
     anomaly_service = AnomalyService()
