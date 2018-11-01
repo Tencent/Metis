@@ -1,19 +1,21 @@
 ## 安装文档
 
 # 目录
-> * [手工安装](#chapter-1)
+> * [方式1：手工安装部署](#chapter-1)
 >> * [依赖环境](#chapter-1-1)
 >> * [数据库环境安装](#chapter-1-2)
 >> * [服务端环境安装](#chapter-1-3)
 >> * [WEB管理端环境安装](#chapter-1-4)
 >
-> * [docker方式部署](#chapter-2)
+> * [方式2：docker安装部署](#chapter-2)
 > 
 本安装文档仅描述了在一台服务器上安装搭建整个Metis的过程，目的是为了让用户对Metis的部署搭建、运行等整体认识。
 
 如要用于生产环境，需要更多考虑分布式系统下容错、容灾能力。若有需要，可以加入Metis的qq技术交流群：288723616。
 
-# 1. <a id="chapter-1"></a>手工安装
+本文档提供两种安装方式：手工安装部署和docker安装部署。可以根据需要选择任意一种安装方式。
+
+# 1. <a id="chapter-1"></a>手工安装部署
 ## 1.1. <a id="chapter-1-1"></a>依赖环境
 
 | 软件  | 软件要求 |
@@ -173,7 +175,7 @@ nginx正常启动后，打开浏览器并访问 `http://${ip}:80/`
 
 npm run build 项目代码开发完成后，执行该命令打包项目代码。在项目根目录会生成一个 dist 目录，然后复制custom目录，放至dist目录下。发布时，将 dist 目录中的全部文件作为静态文件，放至服务器指定的静态文件目录即可
 
-# 2. <a id="chapter-5"></a>docker方式部署
+# 2. <a id="chapter-5"></a>docker安装部署
 
 ## 2.1. 安装docker
 
@@ -187,4 +189,10 @@ service docker start
 ```
 Metis/docker/start.sh ${IP}
 ```
-等待部署完成后,可以通过浏览器直接访问: `http://${IP}`
+等待部署完成后，执行docker ps命令
+```
+docker ps
+``` 
+查看三个容器（metis-db、metis-web、metis-svr）启动状态，如正常启动，则安装成功。
+![docker_ps](images/docker_ps.png)
+如安装成功，可以通过浏览器直接访问: `http://${IP}`
