@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
 Tencent is pleased to support the open source community by making Metis available.
@@ -13,6 +14,6 @@ INPUT_LEN_CH_MAX = 64
 INPUT_ITEM_PER_PAGE_MAX = 100
 INPUT_LIST_LEN_MAX = 5
 VALUE_LEN_MAX = 50000
-UPLOAD_PATH = '/tmp/tmpfile_%s.csv'
+UPLOAD_FILE = '/tmp/tmpfile_%s.csv'
 MARK_POSITIVE = 1
 MARK_NEGATIVE = 2

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
 Tencent is pleased to support the open source community by making Metis available.
@@ -20,7 +21,7 @@ from app.config.errorcode import *
 class SampleOperation(object):
 
     def __init__(self):
-        self.__conn = MySQLdb.connect(host=database.host, port=database.port, user=database.user, passwd=database.passwd, db=database.db)
+        self.__conn = MySQLdb.connect(host=database.HOST, port=database.PORT, user=database.USER, passwd=database.PASSWD, db=database.DB)
         self.__cur = self.__conn.cursor()
         self.__cur.execute("SET NAMES UTF8")
 
@@ -179,7 +180,7 @@ class SampleOperation(object):
             ])
         head = ['指标集名称', '指标集id', '指标名称', '指标id', '样本来源', '训练集_测试集', '正样本_负样本', '样本窗口', 'dataC', 'dataB', 'dataA', '数据时间戳']
         uuid_str = uuid.uuid4().hex[:8]
-        download_file_path = UPLOAD_PATH % uuid_str
+        download_file_path = UPLOAD_FILE % uuid_str
         with open(download_file_path, 'w') as pfile:
             pfile.write(codecs.BOM_UTF8)
             writer = csv.writer(pfile)
@@ -261,7 +262,7 @@ class SampleOperation(object):
         command = "delete from sample_dataset where id = %s "
         num = self.__cur.execute(command, id_num)
         self.__conn.commit()
-        return OP_SUCCESS, {"count":num}
+        return OP_SUCCESS, {"count": num}
 
     def delete_sample_by_anomaly_id(self, data):
         id_num = data['id']

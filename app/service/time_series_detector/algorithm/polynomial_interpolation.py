@@ -12,6 +12,7 @@ import numpy as np
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
+from app.config.common import *
 
 
 class PolynomialInterpolation(object):
@@ -30,7 +31,7 @@ class PolynomialInterpolation(object):
         self.degree = degree
         self.threshold = threshold
 
-    def predict(self, X, window=180):
+    def predict(self, X, window=DEFAULT_WINDOW):
         """
         Predict if a particular sample is an outlier or not.
 

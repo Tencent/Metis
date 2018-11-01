@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
 Tencent is pleased to support the open source community by making Metis available.
