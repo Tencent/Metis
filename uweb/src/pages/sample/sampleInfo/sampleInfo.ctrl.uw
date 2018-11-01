@@ -224,7 +224,7 @@ Controller('sampleInfo', {
             Dialog.warning({
               title: '即将删除该条样本',
               content: '删除后将无法回滚该条样本',
-              onOk: $model.sampleInfoDelete.deleteSample(record),
+              onOk: () =>{ return $model.sampleInfoDelete.deleteSample(record) } ,
             });
           };
           return (
