@@ -3,7 +3,7 @@
 ![](docs/images/Metis_logo.png)
 
 [![license](http://img.shields.io/badge/license-BSD3-blue.svg)](https://github.com/tencent/Metis/master/LICENSE.TXT)
-[![Release Version](https://img.shields.io/badge/release-0.1.0-red.svg)](https://github.com/tencent/Metis/releases)
+[![Release Version](https://img.shields.io/badge/release-0.2.0-red.svg)](https://github.com/tencent/Metis/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tencent/Metis/pulls)
  
 The name **Metis** is taken from the Greek goddess of wisdom, Metis, which is a collection of application practices in the AIOps field. It mainly solves the problem of intelligent operation and maintenance in terms of quality, efficiency and cost. The current version of the open source time series anomaly detection learnware is to solve the anomaly detection problem of time series data from the perspective of machine learning.

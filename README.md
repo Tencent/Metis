@@ -3,7 +3,7 @@
 ![](docs/images/Metis_logo.png)
 
 [![license](http://img.shields.io/badge/license-BSD3-blue.svg)](https://github.com/tencent/Metis/master/LICENSE.TXT)
-[![Release Version](https://img.shields.io/badge/release-0.1.0-red.svg)](https://github.com/tencent/Metis/releases)
+[![Release Version](https://img.shields.io/badge/release-0.2.0-red.svg)](https://github.com/tencent/Metis/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tencent/Metis/pulls)
 
 **Metis** 这个名字取自希腊神话中的智慧女神墨提斯（Metis），它是一系列AIOps领域的应用实践集合。主要解决在质量、效率、成本方面的智能运维问题。当前版本开源的时间序列异常检测学件，是从机器学习的角度来解决时序数据的异常检测问题。
