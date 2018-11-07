@@ -68,15 +68,15 @@ mysql -umetis -pmetis@123 -h127.0.0.1 metis < /data/Metis/app/sql/time_series_de
 
 4、将数据库配置信息更新到服务端配置文件`database.py`
 ```
-vim /data/Metis/app/config/database.py
+vim /data/Metis/app/dao/db_common/database.py
 ```
 改写配置
 ```
-db = 'metis'
-user = 'metis'
-passwd = 'metis@123'
-host = '127.0.0.1'
-port = 3306
+DB = 'metis'
+USER = 'metis'
+PASSWD = 'metis@123'
+HOST = '127.0.0.1'
+PORT = 3306
 ```
 
 ## 1.3. <a id="chapter-1-3"></a>服务端环境安装
