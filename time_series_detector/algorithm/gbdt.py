@@ -13,13 +13,12 @@ import pickle
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.externals import joblib
-from app.service.time_series_detector.feature import feature_service
-from app.utils.utils import *
-from app.config.errorcode import *
-from app.config.common import *
+from time_series_detector.feature import feature_service
+from time_series_detector.common.tsd_common import *
+from time_series_detector.common.tsd_errorcode import *
 
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../../model/time_series_detector/')
+MODEL_PATH = os.path.join(os.path.dirname(__file__), '../model/')
 DEFAULT_MODEL = MODEL_PATH + "gbdt_default_model"
 
 
@@ -73,7 +72,7 @@ class Gbdt(object):
         y_train = []
         features = self.__calculate_features(data, window)
         if features:
-            return LACK_SAMPLE
+            return TSD_LACK_SAMPLE
         for index in features:
             X_train.append(index[0])
             y_train.append(index[1])
@@ -85,8 +84,8 @@ class Gbdt(object):
             model_name = MODEL_PATH + task_id + "_model"
             joblib.dump(grd, model_name)
         except Exception as ex:
-            return TRAIN_ERR, str(ex)
-        return OP_SUCCESS, ""
+            return TSD_TRAIN_ERR, str(ex)
+        return TSD_OP_SUCCESS, ""
 
     def predict(self, X, window=DEFAULT_WINDOW, model_name=DEFAULT_MODEL):
         """

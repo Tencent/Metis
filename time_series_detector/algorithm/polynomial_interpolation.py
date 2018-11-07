@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
-from app.config.common import *
+from time_series_detector.common.tsd_common import *
 
 
 class PolynomialInterpolation(object):

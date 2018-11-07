@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import json
+from functools import wraps
 from django.shortcuts import render
 from django.http import FileResponse
-from common.render import render_json
-from functools import wraps
+from render import render_json
 from app.service.time_series_detector.anomaly_service import *
 from app.service.time_series_detector.sample_service import *
 from app.service.time_series_detector.task_service import *
 from app.service.time_series_detector.detect_service import *
-from app.config.errorcode import *
-from app.utils.utils import *
+from app.common.errorcode import *
+from app.common.common import *
 
 
 def check_post(func):

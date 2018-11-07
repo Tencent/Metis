@@ -10,7 +10,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import json
 from app.dao.time_series_detector.anomaly_op import *
-from app.utils.utils import *
 
 
 class AnomalyService(object):

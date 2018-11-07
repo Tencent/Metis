@@ -9,7 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 import numpy as np
-from app.config.common import *
+from time_series_detector.common.tsd_common import *
 
 
 def time_series_moving_average(x):

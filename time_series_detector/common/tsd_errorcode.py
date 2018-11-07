@@ -8,12 +8,22 @@ https://opensource.org/licenses/BSD-3-Clause
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 """
 
-DEFAULT_WINDOW = 180
-INPUT_LEN_ENG_MAX = 32
-INPUT_LEN_CH_MAX = 64
-INPUT_ITEM_PER_PAGE_MAX = 100
-INPUT_LIST_LEN_MAX = 5
-VALUE_LEN_MAX = 50000
-UPLOAD_FILE = '/tmp/tmpfile_%s.csv'
-MARK_POSITIVE = 1
-MARK_NEGATIVE = 2
+TSD_OP_SUCCESS = 0
+TSD_THROW_EXP = 1000
+TSD_CHECK_PARAM_FAILED = 1002
+TSD_FILE_FORMAT_ERR = 1003
+TSD_CAL_FEATURE_ERR = 2001
+TSD_READ_FEATURE_FAILED = 2002
+TSD_TRAIN_ERR = 2003
+TSD_LACK_SAMPLE = 2004
+
+ERR_CODE = {
+    TSD_OP_SUCCESS: "操作成功",
+    TSD_THROW_EXP: "抛出异常",
+    TSD_CHECK_PARAM_FAILED: "参数检查失败",
+    TSD_FILE_FORMAT_ERR: "文件格式有误",
+    TSD_CAL_FEATURE_ERR: "特征计算出错",
+    TSD_READ_FEATURE_FAILED: "读取特征数据失败",
+    TSD_TRAIN_ERR: "训练出错",
+    TSD_LACK_SAMPLE: "缺少正样本或负样本"
+}

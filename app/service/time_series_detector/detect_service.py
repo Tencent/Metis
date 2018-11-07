@@ -14,11 +14,12 @@ import threading
 from app.dao.time_series_detector import anomaly_op
 from app.dao.time_series_detector import sample_op
 from app.dao.time_series_detector import train_op
-from app.utils.utils import *
-from app.service.time_series_detector.algorithm import isolation_forest, ewma, polynomial_interpolation, statistic, xgboosting
-from app.config.errorcode import *
-from app.config.common import *
-MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../model/time_series_detector/')
+from time_series_detector.algorithm import xgboosting
+from time_series_detector import detect
+from app.common.errorcode import *
+from app.common.common import *
+from time_series_detector.common.tsd_errorcode import *
+MODEL_PATH = os.path.join(os.path.dirname(__file__), './model/')
 
 
 class DetectService(object):
@@ -26,11 +27,7 @@ class DetectService(object):
     def __init__(self):
         self.sample_op_obj = sample_op.SampleOperation()
         self.anomaly_op_obj = anomaly_op.AbnormalOperation()
-        self.iforest_obj = isolation_forest.IForest()
-        self.ewma_obj = ewma.Ewma()
-        self.polynomial_obj = polynomial_interpolation.PolynomialInterpolation()
-        self.statistic_obj = statistic.Statistic()
-        self.supervised_obj = xgboosting.XGBoosting()
+        self.detect_obj = detect.Detect()
 
     def __generate_model(self, data, task_id):
         """
@@ -125,62 +122,14 @@ class DetectService(object):
     def __check_param(self, data):
         if ("viewName" not in data.keys()) or ("attrId" not in data.keys()) or ("attrName" not in data.keys()) or ("time" not in data.keys()) or ("dataC" not in data.keys()) or ("dataB" not in data.keys()) or ("dataA" not in data.keys()):
             return CHECK_PARAM_FAILED, "missing parameter"
-        if not data['dataA']:
-            return CHECK_PARAM_FAILED, "dataA can not be empty"
-        if not data['dataB']:
-            return CHECK_PARAM_FAILED, "dataB can not be empty"
-        if not data['dataC']:
-            return CHECK_PARAM_FAILED, "dataC can not be empty"
-        if not self.__list_is_digit(data['dataA'].split(',')):
-            return CHECK_PARAM_FAILED, "dataA contains illegal numbers"
-        if not self.__list_is_digit(data['dataB'].split(',')):
-            return CHECK_PARAM_FAILED, "dataB contains illegal numbers"
-        if not self.__list_is_digit(data['dataC'].split(',')):
-            return CHECK_PARAM_FAILED, "dataC contains illegal numbers"
-        if "window" in data:
-            window = data["window"]
-        else:
-            window = DEFAULT_WINDOW
-        if len(data['dataC'].split(',')) != (2 * window + 1):
-            return CHECK_PARAM_FAILED, "dataC length does not match"
-        if len(data['dataB'].split(',')) != (2 * window + 1):
-            return CHECK_PARAM_FAILED, "dataB length does not match"
-        if len(data['dataA'].split(',')) != (window + 1):
-            return CHECK_PARAM_FAILED, "dataA length does not match"
         return OP_SUCCESS, ""
 
     def value_predict(self, data):
-        """
-        Predict the data
-
-        :param data: the time series to detect of
-        """
         ret_code, ret_data = self.__check_param(data)
         if ret_code != OP_SUCCESS:
             return build_ret_data(ret_code, ret_data)
-        if "taskId" in data and data["taskId"]:
-            model_name = MODEL_PATH + data["taskId"] + "_model"
-        else:
-            model_name = MODEL_PATH + "xgb_default_model"
-        combined_data = data["dataC"] + "," + data["dataB"] + "," + data["dataA"]
-        time_series = map(int, combined_data.split(','))
-        if "window" in data:
-            window = data["window"]
-        else:
-            window = DEFAULT_WINDOW
-        statistic_result = self.statistic_obj.predict(time_series)
-        ewma_result = self.ewma_obj.predict(time_series)
-        polynomial_result = self.polynomial_obj.predict(time_series, window)
-        iforest_result = self.iforest_obj.predict(time_series, window)
-        if statistic_result == 0 or ewma_result == 0 or polynomial_result == 0 or iforest_result == 0:
-            xgb_result = self.supervised_obj.predict(time_series, window, model_name)
-            res_value = xgb_result[0]
-            prob = xgb_result[1]
-        else:
-            res_value = 1
-            prob = 1
-        ret_data = {"ret": res_value, "p": str(prob)}
-        if ret_data["ret"] == 0:
+        ret_code, ret_data = self.detect_obj.value_predict(data)
+        if ret_code == TSD_OP_SUCCESS and ret_data["ret"] == 0:
             anomaly_params = {
                 "view_id": data["viewId"],
                 "view_name": data["viewName"],
@@ -192,18 +141,14 @@ class DetectService(object):
                 "data_a": data["dataA"]
             }
             self.anomaly_op_obj.insert_anomaly(anomaly_params)
-        return build_ret_data(OP_SUCCESS, ret_data)
+        return build_ret_data(ret_code, ret_data)
 
     def rate_predict(self, data):
-        combined_data = data["dataC"] + "," + data["dataB"] + "," + data["dataA"]
-        time_series = map(float, combined_data.split(','))
-        statistic_result = self.statistic_obj.predict(time_series)
-        if statistic_result == 0:
-            prob = 0
-        else:
-            prob = 1
-        ret_data = {"ret": statistic_result, "p": str(prob)}
-        if ret_data["ret"] == 0:
+        ret_code, ret_data = self.__check_param(data)
+        if ret_code != OP_SUCCESS:
+            return build_ret_data(ret_code, ret_data)
+        ret_data, ret_data = self.detect_obj.rate_predict(data)
+        if ret_code == TSD_OP_SUCCESS and ret_data["ret"] == 0:
             anomaly_params = {
                 "view_id": data["viewId"],
                 "view_name": data["viewName"],

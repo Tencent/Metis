@@ -12,9 +12,8 @@ import json
 import traceback
 import csv
 from app.dao.time_series_detector.sample_op import *
-from app.config.errorcode import *
-from app.utils.utils import *
-from app.config.common import *
+from app.common.errorcode import *
+from app.common.common import *
 
 
 class SampleService(object):

@@ -9,8 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 from tests.fixtures import DataTestCase
-from app.service.time_series_detector.feature.statistical_features import *
-
+from time_series_detector.feature.statistical_features import *
 
 class FeatureTestCase(DataTestCase):
 

@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import statistical_features
 import classification_features
 import fitting_features
-from app.utils import utils
+from time_series_detector.common import tsd_common
 
 
 def extract_features(time_series, window):
@@ -25,15 +25,15 @@ def extract_features(time_series, window):
     :return: the value of features
     :return type: list with float
     """
-    if not utils.is_standard_time_series(time_series, window):
+    if not tsd_common.is_standard_time_series(time_series, window):
         # add your report of this error here...
 
         return []
 
     # spilt time_series
-    split_time_series = utils.split_time_series(time_series, window)
+    split_time_series = tsd_common.split_time_series(time_series, window)
     # nomalize time_series
-    normalized_split_time_series = utils.normalize_time_series(split_time_series)
+    normalized_split_time_series = tsd_common.normalize_time_series(split_time_series)
     s_features = statistical_features.get_statistical_features(normalized_split_time_series[4])
     f_features = fitting_features.get_fitting_features(normalized_split_time_series)
     c_features = classification_features.get_classification_features(normalized_split_time_series[0] + normalized_split_time_series[1][1:] + normalized_split_time_series[2] + normalized_split_time_series[3][1:] + normalized_split_time_series[4])

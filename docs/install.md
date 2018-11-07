@@ -137,7 +137,7 @@ python /data/Metis/app/controller/manage.py runserver {ip}:{port}
 
 运行npm run build
 
-将uweb目录下的custom文件夹下复制到uweb目录下生成的dist文件夹中
+将uweb目录下的custom文件夹复制到uweb目录下生成的dist文件夹中
 
 将nginx配置文件中的root定位到uweb目录下的dist文件夹
 

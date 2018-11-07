@@ -10,8 +10,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import json
 from app.dao.time_series_detector.train_op import *
-from app.config.errorcode import *
-from app.utils.utils import *
+from app.common.errorcode import *
+from app.common.common import *
 
 
 class TrainService(object):

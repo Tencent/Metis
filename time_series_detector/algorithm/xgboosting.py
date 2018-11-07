@@ -10,11 +10,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import os
 import xgboost as xgb
-from app.service.time_series_detector.feature import feature_service
-from app.utils.utils import *
-from app.config.errorcode import *
-from app.config.common import *
-MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../../model/time_series_detector/')
+from time_series_detector.feature import feature_service
+from time_series_detector.common.tsd_errorcode import *
+from time_series_detector.common.tsd_common import *
+MODEL_PATH = os.path.join(os.path.dirname(__file__), '../model/')
 DEFAULT_MODEL = MODEL_PATH + "xgb_default_model"
 
 
@@ -76,7 +75,7 @@ class XGBoosting(object):
         try:
             f = open(feature_file_name, "w")
         except Exception as ex:
-            return CAL_FEATURE_ERR, str(ex)
+            return TSD_CAL_FEATURE_ERR, str(ex)
         times = 0
         for temp in data:
             if times > 0:
@@ -86,7 +85,7 @@ class XGBoosting(object):
             for x in result:
                 f.write(' ' + x)
             times = times + 1
-        return OP_SUCCESS, ""
+        return TSD_OP_SUCCESS, ""
 
     def __calculate_features(self, data, feature_file_name, window=DEFAULT_WINDOW):
         """
@@ -106,7 +105,7 @@ class XGBoosting(object):
         try:
             ret_code, ret_data = self.__save_libsvm_format(features, feature_file_name)
         except Exception as ex:
-            ret_code = CAL_FEATURE_ERR
+            ret_code = TSD_CAL_FEATURE_ERR
             ret_data = str(ex)
         return ret_code, ret_data
 
@@ -121,12 +120,12 @@ class XGBoosting(object):
         model_name = MODEL_PATH + task_id + "_model"
         feature_file_name = MODEL_PATH + task_id + "_features"
         ret_code, ret_data = self.__calculate_features(data, feature_file_name)
-        if ret_code != OP_SUCCESS:
+        if ret_code != TSD_OP_SUCCESS:
             return ret_code, ret_data
         try:
             dtrain = xgb.DMatrix(feature_file_name)
         except Exception as ex:
-            return READ_FEATURE_FAILED, str(ex)
+            return TSD_READ_FEATURE_FAILED, str(ex)
         params = {
             'max_depth': self.max_depth,
             'eta': self.eta,
@@ -143,8 +142,8 @@ class XGBoosting(object):
             bst = xgb.train(params, dtrain, num_round)
             bst.save_model(model_name)
         except Exception as ex:
-            return TRAIN_ERR, str(ex)
-        return OP_SUCCESS, ""
+            return TSD_TRAIN_ERR, str(ex)
+        return TSD_OP_SUCCESS, ""
 
     def predict(self, X, window=DEFAULT_WINDOW, model_name=DEFAULT_MODEL):
         """

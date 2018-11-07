@@ -9,9 +9,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 """
 
 import MySQLdb
-from app.config import database
-from app.config.common import *
-from app.config.errorcode import *
+from app.dao.db_common import database
+from app.common.common import *
+from app.common.errorcode import *
 
 
 class TrainOperation(object):

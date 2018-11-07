@@ -8,13 +8,11 @@ https://opensource.org/licenses/BSD-3-Clause
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 """
 
-import time
-import datetime
 import MySQLdb
-from app.config import database
+from app.dao.db_common import database
 from app.dao.time_series_detector.sample_op import *
-from app.config.common import *
-from app.config.errorcode import *
+from app.common.common import *
+from app.common.errorcode import *
 
 
 class AbnormalOperation(object):
