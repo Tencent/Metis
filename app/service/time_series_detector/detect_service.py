@@ -120,7 +120,7 @@ class DetectService(object):
         return True
 
     def __check_param(self, data):
-        if ("viewName" not in data.keys()) or ("attrId" not in data.keys()) or ("attrName" not in data.keys()) or ("time" not in data.keys()) or ("dataC" not in data.keys()) or ("dataB" not in data.keys()) or ("dataA" not in data.keys()):
+        if ("viewName" not in data.keys()) or ("viewId" not in data.keys()) or ("attrId" not in data.keys()) or ("attrName" not in data.keys()) or ("time" not in data.keys()) or ("dataC" not in data.keys()) or ("dataB" not in data.keys()) or ("dataA" not in data.keys()):
             return CHECK_PARAM_FAILED, "missing parameter"
         return OP_SUCCESS, ""
 

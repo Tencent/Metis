@@ -4,16 +4,16 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `anomaly`;
 CREATE TABLE `anomaly` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `view_id` varchar(31) DEFAULT NULL,
-  `view_name` varchar(63) DEFAULT NULL,
-  `attr_id` varchar(31) DEFAULT NULL,
-  `attr_name` varchar(63) DEFAULT NULL,
-  `time` datetime DEFAULT NULL,
-  `data_c` text NOT NULL,
-  `data_b` text NOT NULL,
-  `data_a` text NOT NULL,
-  `mark_flag` int(1) NOT NULL DEFAULT '0',
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `view_id` varchar(31) NOT NULL DEFAULT '' comment '指标集id',
+  `view_name` varchar(63) NOT NULL DEFAULT '' comment '指标集名',
+  `attr_id` varchar(31) NOT NULL DEFAULT '' comment '指标id',
+  `attr_name` varchar(63) NOT NULL DEFAULT '' comment '指标名',
+  `time` datetime DEFAULT NULL comment '数据时间',
+  `data_c` text,
+  `data_b` text,
+  `data_a` text,
+  `mark_flag` tinyint(1) NOT NULL DEFAULT 0 comment '0:没有打标、1:打标为正样本、2:打标为负样本',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

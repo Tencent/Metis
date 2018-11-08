@@ -4,21 +4,21 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `sample_dataset`;
 CREATE TABLE `sample_dataset` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `update_time` timestamp NULL DEFAULT NULL,
-  `view_id` varchar(31) DEFAULT NULL,
-  `view_name` varchar(63) DEFAULT NULL,
-  `attr_name` varchar(63) DEFAULT NULL,
-  `attr_id` varchar(31) DEFAULT NULL,
-  `source` varchar(31) DEFAULT NULL,
-  `train_or_test` varchar(31) DEFAULT NULL,
-  `positive_or_negative` varchar(31) DEFAULT NULL,
-  `window` int(2) DEFAULT NULL,
-  `data_time` int(11) DEFAULT NULL,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '样本更新时间',
+  `view_id` varchar(31) NOT NULL DEFAULT '' comment '指标集id',
+  `view_name` varchar(63) NOT NULL DEFAULT '' comment '指标名',
+  `attr_name` varchar(63) NOT NULL DEFAULT '' comment '指标名',
+  `attr_id` varchar(31) NOT NULL DEFAULT '' comment '指标id',
+  `source` varchar(31) NOT NULL DEFAULT '' comment '样本来源',
+  `train_or_test` varchar(10) NOT NULL DEFAULT '' comment 'test：测试样本、train:训练样本',
+  `positive_or_negative` varchar(20) NOT NULL DEFAULT '' comment 'positive:正样本、negative负样本',
+  `window` int(10) NOT NULL DEFAULT 0 comment '窗口值，目前支持180',
+  `data_time` int(10) DEFAULT NULL comment '样本时间',
   `data_c` text,
   `data_b` text,
   `data_a` text,
-  `anomaly_id` bigint(10) DEFAULT NULL,
+  `anomaly_id` int(10) DEFAULT NULL comment '标识从anomaly里插入的样本',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

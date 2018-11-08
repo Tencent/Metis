@@ -14,7 +14,9 @@
 针对当前一个值的检测，需要依赖过去三段数据，数据选取规则参考示例图：
 ![data_info](images/data_info.png)
 
-### 1、量值检测
+### 1、HTTP接口
+
+#### 1、量值检测
 
 * API： POST /{ip}:{port}/PredictValue
 * 功能说明：根据参考数据检测最近一个数据点是否异常
@@ -73,7 +75,7 @@
 | ret | int | 检测结果是否异常。0:异常；1:正常 |
 | p | string | 概率值，值越小，判定为异常的置信度越高，目前p<0.15，判决为异常 |
 
-### 2、率值检测
+#### 2、率值检测
 
 * API： POST /{ip}:{port}/PredictRate
 * 功能说明：根据参考数据检测最近一个数据点是否异常
@@ -130,3 +132,97 @@
 | msg | string | 返回消息 |
 | ret | int | 检测结果是否异常。0:异常；1:正常 |
 | p | string | 概率值，值越小，判定为异常的置信度越高 |
+
+### 2、Python API
+
+Metis工程目录下time_series_detector目录为时间序列异常检测学件库，可以在python下直接调用
+
+#### 1、量值检测
+* 调用方法： 
+
+```
+  # Python
+  from time_series_detector import detect
+  detect_obj = detect.Detect()
+  detect_obj.value_predict(data)
+```
+
+* 功能说明：根据参考数据检测最近一个数据点是否异常
+* 传入参数：python字典
+	
+```
+{
+    "taskId":"1530608070706",
+    "window":180,
+    "dataC":"9,10,152,...,255,...,16",
+    "dataB":"9,10,152,...,255,...,18",
+    "dataA":"9,10,152,...,458"
+}
+```
+
+* 传入参数说明：同上
+
+* 返回参数：
+```
+    code, {
+        "ret":0,
+        "p":"0.05",
+    }
+
+```
+
+* 返回参数说明：
+
+| 名称  | 类型  | 说明 |
+|---|---|---|
+| code | int | 返回码。0:成功；非0:失败 |
+| ret | int | 检测结果是否异常。0:异常；1:正常 |
+| p | string | 概率值，值越小，判定为异常的置信度越高，目前p<0.15，判决为异常 |
+
+* 调用案例：
+
+![data_info](images/python_api_value_predict.png)
+
+#### 2、率值检测
+* 调用方法： 
+
+```
+  # Python
+  from time_series_detector import detect
+  detect_obj = detect.Detect()
+  detect_obj.rate_predict(data)
+```
+
+* 功能说明：根据参考数据检测最近一个数据点是否异常
+* 传入参数：python字典
+	
+```
+{
+    "dataC":"9,10,152,...,255,...,16",
+    "dataB":"9,10,152,...,255,...,18",
+    "dataA":"9,10,152,...,458"
+}
+```
+
+* 传入参数说明：同上
+
+* 返回参数：
+```
+    code, {
+        "ret":0,
+        "p":"0",
+    }
+
+```
+
+* 返回参数说明：
+
+| 名称  | 类型  | 说明 |
+|---|---|---|
+| code | int | 返回码。0:成功；非0:失败 |
+| ret | int | 检测结果是否异常。0:异常；1:正常 |
+| p | string | 概率值，值越小，判定为异常的置信度越高，目前p<0.15，判决为异常 |
+
+* 调用案例：
+
+![data_info](images/python_api_rate_predict.png)

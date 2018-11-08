@@ -33,7 +33,7 @@ class Detect(object):
         return True
 
     def __check_param(self, data):
-        if ("viewName" not in data.keys()) or ("attrId" not in data.keys()) or ("attrName" not in data.keys()) or ("time" not in data.keys()) or ("dataC" not in data.keys()) or ("dataB" not in data.keys()) or ("dataA" not in data.keys()):
+        if ("dataC" not in data.keys()) or ("dataB" not in data.keys()) or ("dataA" not in data.keys()):
             return TSD_CHECK_PARAM_FAILED, "missing parameter"
         if not data['dataA']:
             return TSD_CHECK_PARAM_FAILED, "dataA can not be empty"
