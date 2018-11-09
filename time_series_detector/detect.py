@@ -61,9 +61,18 @@ class Detect(object):
 
     def value_predict(self, data):
         """
-        Predict the data
+        Predict if the latest value is an outlier or not.
 
-        :param data: the time series to detect of
+        :param data: The attributes are:
+                    'window', the length of window,
+                    'taskId', the id of detect model,
+                    'dataC', a piece of data to learn,
+                    'dataB', a piece of data to learn,
+                    'dataA', a piece of data to learn and the latest value to be detected.
+        :type data: Dictionary-like object
+        :return: The attributes are:
+                    'p', the class probability,
+                    'ret', the result of detect(1 denotes normal, 0 denotes abnormal).
         """
         ret_code, ret_data = self.__check_param(data)
         if ret_code != TSD_OP_SUCCESS:
@@ -94,9 +103,16 @@ class Detect(object):
 
     def rate_predict(self, data):
         """
-        Predict the data
+        Predict if the latest value is an outlier or not.
 
-        :param data: the time series to detect of
+        :param data: The attributes are:
+                    'dataC', a piece of data to learn,
+                    'dataB', a piece of data to learn,
+                    'dataA', a piece of data to learn and the latest value to be detected.
+        :type data: Dictionary-like object
+        :return: The attributes are:
+                    'p', the class probability,
+                    'ret', the result of detect(1 denotes normal, 0 denotes abnormal).
         """
         combined_data = data["dataC"] + "," + data["dataB"] + "," + data["dataA"]
         time_series = map(float, combined_data.split(','))
