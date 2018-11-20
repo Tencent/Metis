@@ -143,11 +143,11 @@ Metis工程目录下time_series_detector目录为时间序列异常检测学件�
 * 调用方法： 
 
 ```
-  # Python
-  from time_series_detector import detect
-  
-  detect_obj = detect.Detect()
-  detect_obj.value_predict(data)
+# Python
+from time_series_detector import detect
+
+detect_obj = detect.Detect()
+detect_obj.value_predict(data)
 ```
 
 
@@ -201,11 +201,11 @@ Metis工程目录下time_series_detector目录为时间序列异常检测学件�
 * 调用方法： 
 
 ```
-  # Python
-  from time_series_detector import detect
-  
-  detect_obj = detect.Detect()
-  detect_obj.rate_predict(data)
+# Python
+from time_series_detector import detect
+
+detect_obj = detect.Detect()
+detect_obj.rate_predict(data)
 ```
 
 * 传入参数：python字典
@@ -248,3 +248,285 @@ Metis工程目录下time_series_detector目录为时间序列异常检测学件�
 * 调用案例：
 
 ![data_info](images/python_api_rate_predict.png)
+
+### 三、LIB库
+Metis工程目录下time_series_detector/lib目录为时间序列异常检测学件，可以在python代码或C代码中调用
+libdetect.so在CentOs7.2下编译，目前仅支持在CentOs7.2或更高版本Centos使用
+
+
+####Python代码中调用:
+
+##### 1、量值检测
+* 功能说明：根据参考数据检测最近一个数据点是否异常
+
+* 调用方法： 
+
+ 加载so库：
+ 
+```
+# Python
+so = cdll.LoadLibrary
+metis_lib = so("./libdetect.so")
+handle = metis_lib.load_model("./xgb_default_model")
+```
+
+  构造传入数据：
+   
+```
+# Python
+from ctypes import *
+
+class ValueData(Structure):
+    _fields_ = [('value_a', POINTER(c_int)), ('value_b', POINTER(c_int)), ('value_c', POINTER(c_int)),
+                ('len_a', c_int), ('len_b', c_int), ('len_c', c_int)]
+
+# test data
+data_c = [1] * 361
+data_b = [1] * 361
+data_a = [1] * 180
+data_a.append(10)
+
+paarray = (c_int * len(data_a))(*data_a)
+pbarray = (c_int * len(data_b))(*data_b)
+pcarray = (c_int * len(data_c))(*data_c)
+data_value = ValueData(paarray, pbarray, pcarray, len(data_a), len(data_b), len(data_c))  
+```
+
+调用计算函数：
+
+```
+#python
+result = c_int()
+prob = c_float()
+ret_code = metis_lib.value_predict(handle, byref(data_value), byref(result), byref(prob))
+if ret_code != 0:
+    print "value_predict error code = %d" % ret_code
+print result, prob
+```
+
+
+* 传入参数：C结构体
+	
+```
+typedef struct {
+    int* value_a;
+    int* value_b;
+    int* value_c;
+    int len_a;
+    int len_b;
+    int len_c;
+} ValueData;
+```
+* 传入参数说明：
+
+| 名称  | 类型 |必填| 默认值 | 说明 |
+| --- | --- | --- |---- | --- |
+| handle|  int| 是| 无|模型句柄，由load_model返回|
+| ValueData|  struct| 是| 无|待检测数据|
+
+
+
+* 返回参数：
+```
+ret_code
+result
+prob
+```
+
+* 返回参数说明：
+
+| 名称  | 类型  | 说明 |
+|---|---|---|
+| ret_code | int | 返回码。0:成功；非0:失败 |
+| result | c_int | 检测结果是否异常。0:异常；1:正常 |
+| prob | c_float | 概率值，值越小，判定为异常的置信度越高，目前prob<0.15，判决为异常 |
+
+##### 2、率值检测
+* 功能说明：根据参考数据检测最近一个数据点是否异常
+
+* 调用方法： 
+
+ 加载so库：
+ 
+```
+# Python
+so = cdll.LoadLibrary
+metis_lib = so("./libdetect.so")
+```
+
+  构造传入数据：
+   
+```
+# Python
+from ctypes import *
+
+class RateData(Structure):
+_fields_ = [('value_a', POINTER(c_double)), ('value_b', POINTER(c_double)), ('value_c', POINTER(c_double)),
+            ('len_a', c_int), ('len_b', c_int), ('len_c', c_int)]
+
+# test data
+data_c = [1.0] * 361
+data_b = [1.0] * 361
+data_a = [1.0] * 180
+data_a.append(0.9)
+
+paarray = (c_double * len(data_a))(*data_a)
+pbarray = (c_double * len(data_b))(*data_b)
+pcarray = (c_double * len(data_c))(*data_c)
+data_value = RateData(paarray, pbarray, pcarray, len(data_a), len(data_b), len(data_c))
+```
+
+调用计算函数：
+
+```
+#python
+result = c_int()
+prob = c_float()
+ret_code = metis_lib.rate_predict(byref(data_value), byref(result), byref(prob))
+if ret_code != 0:
+    print "value_predict error code = %d" % ret_code
+print result, prob
+```
+
+
+* 传入参数：C结构体
+	
+```
+typedef struct {
+    int* value_a;
+    int* value_b;
+    int* value_c;
+    int len_a;
+    int len_b;
+    int len_c;
+} ValueData;
+```
+* 传入参数说明：
+
+| 名称  | 类型 |必填| 默认值 | 说明 |
+| --- | --- | --- |---- | --- |
+| ValueData|  struct| 是| 无|待检测数据|
+
+
+
+* 返回参数：
+```
+ ret_code
+ result
+ prob
+```
+
+* 返回参数说明：
+
+| 名称  | 类型  | 说明 |
+|---|---|---|
+| ret_code | int | 返回码。0:成功；非0:失败 |
+| result | c_int | 检测结果是否异常。0:异常；1:正常 |
+| prob | c_float | 概率值，值越小，判定为异常的置信度越高，目前prob<0.15，判决为异常 |
+
+####C代码中调用:
+
+在C中调用检测函数，需要include头文件detect.h，在编译时链接libdetect.so文件。
+##### 1、量值检测
+* 功能说明：根据参考数据检测最近一个数据点是否异常
+
+* 调用方法： 
+
+调用load_model加载模型，然后调用value_predict进行预测：
+
+
+ ```
+ #include "detect.h"
+ 
+ if (NULL == (handle = load_model("./xgb_default_model")))
+ {
+     printf("load model error\n");
+     return 0;
+ }
+ int ret = value_predict(handle, &value_data, &sample_result, &prob); 
+ printf ("ret=%d result = %d prob = %f\n", ret, sample_result, prob); 
+ ```
+ 
+ * 传入参数：C结构体
+	
+```
+typedef struct {
+    int* value_a;
+    int* value_b;
+    int* value_c;
+    int len_a;
+    int len_b;
+    int len_c;
+} ValueData;
+```
+* 传入参数说明：
+
+| 名称  | 类型 |必填| 默认值 | 说明 |
+| --- | --- | --- |---- | --- |
+| handle|  int| 是| 无|模型句柄，由load_model返回|
+| ValueData|  struct| 是| 无|待检测数据|
+
+
+
+* 返回参数：
+```
+ret
+sample_result
+prob
+```
+
+* 返回参数说明：
+
+| 名称  | 类型  | 说明 |
+|---|---|---|
+| ret | int | 返回码。0:成功；非0:失败 |
+| sample_result | c_int | 检测结果是否异常。0:异常；1:正常 |
+| prob | c_float | 概率值，值越小，判定为异常的置信度越高，目前prob<0.15，判决为异常 |
+
+##### 2、率值检测
+* 功能说明：根据参考数据检测最近一个数据点是否异常
+
+* 调用方法： 
+
+```
+#include "detect.h"
+float prob;
+int sample_result;
+int ret = rate_predict(&rate_data, &sample_result, &prob);
+printf ("ret=%d result =%d prob = %f \n", ret, sample_result, prob);
+```
+
+
+* 传入参数：C结构体
+	
+```
+typedef struct {
+    double* value_a;
+    double* value_b;
+    double* value_c;
+    int len_a;
+    int len_b;
+    int len_c;
+} RateData;
+```
+* 传入参数说明：
+
+| 名称  | 类型 |必填| 默认值 | 说明 |
+| --- | --- | --- |---- | --- |
+| ValueData|  struct| 是| 无|待检测数据|
+
+
+* 返回参数：
+```
+ret
+sample_result
+prob
+```
+
+* 返回参数说明：
+
+| 名称  | 类型  | 说明 |
+|---|---|---|
+| ret | int | 返回码。0:成功；非0:失败 |
+| result | c_int | 检测结果是否异常。0:异常；1:正常 |
+| prob | c_float | 概率值，值越小，判定为异常的置信度越高，目前prob<0.15，判决为异常 |
