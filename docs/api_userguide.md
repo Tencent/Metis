@@ -254,7 +254,7 @@ Metis工程目录下time_series_detector/lib目录为时间序列异常检测学
 libdetect.so在CentOs7.2下编译，目前仅支持在CentOs7.2或更高版本Centos使用
 
 
-####Python代码中调用:
+#### Python代码中调用:
 
 ##### 1、量值检测
 * 功能说明：根据参考数据检测最近一个数据点是否异常
@@ -393,13 +393,13 @@ print result, prob
 	
 ```
 typedef struct {
-    int* value_a;
-    int* value_b;
-    int* value_c;
+    double* value_a;
+    double* value_b;
+    double* value_c;
     int len_a;
     int len_b;
     int len_c;
-} ValueData;
+} RateData;
 ```
 * 传入参数说明：
 
@@ -422,7 +422,7 @@ typedef struct {
 |---|---|---|
 | ret_code | int | 返回码。0:成功；非0:失败 |
 | result | c_int | 检测结果是否异常。0:异常；1:正常 |
-| prob | c_float | 概率值，值越小，判定为异常的置信度越高，目前prob<0.15，判决为异常 |
+| prob | c_float | 概率值，值越小，判定为异常的置信度越高 |
 
 ####C代码中调用:
 
@@ -529,4 +529,4 @@ prob
 |---|---|---|
 | ret | int | 返回码。0:成功；非0:失败 |
 | result | c_int | 检测结果是否异常。0:异常；1:正常 |
-| prob | c_float | 概率值，值越小，判定为异常的置信度越高，目前prob<0.15，判决为异常 |
+| prob | c_float | 概率值，值越小，判定为异常的置信度越高 |
