@@ -78,3 +78,19 @@ def normalize_time_series(split_time_series):
         normalized_data_a
     ]
     return normalized_split_time_series
+
+
+def normalize_time_series_by_max_min(split_time_series):
+    """
+    Normalize the split_time_series by max_min_normalization.
+
+    :param split_time_series: [[data_c_left], [data_c_right], [data_b_left], [data_b_right], [data_a]]
+    :return: max_min_normalized time_series
+    """
+    time_series = split_time_series[0] + split_time_series[1][1:] + split_time_series[2] + split_time_series[3][1:] + split_time_series[4]
+    max_value = np.max(time_series)
+    min_value = np.min(time_series)
+    if max_value - min_value > 0:
+        normalized_time_series = list((np.array(time_series) - min_value) / float(max_value - min_value))
+
+    return normalized_time_series

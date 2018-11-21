@@ -49,7 +49,7 @@ def time_series_weighted_moving_average(x):
     for w in range(1, min(50, DEFAULT_WINDOW), 5):
         w = min(len(x), w)  # avoid the case len(value_list) < w
         coefficient = np.array(range(1, w + 1))
-        temp_list.append((np.dot(coefficient, x[-w:])) / (w * (w + 1) / 2))
+        temp_list.append((np.dot(coefficient, x[-w:])) / float(w * (w + 1) / 2))
     return list(np.array(temp_list) - x[-1])
 
 
@@ -210,6 +210,11 @@ def time_series_periodic_features(data_c_left, data_c_right, data_b_left, data_b
             periodic_features.append(-1)
         else:
             periodic_features.append(1)
+
+    step = DEFAULT_WINDOW / 6
+    for w in range(1, DEFAULT_WINDOW, step):
+        periodic_features.append(min(max(data_a[w - 1:w + step]) - data_a[-1], 0))
+        periodic_features.append(max(min(data_a[w - 1:w + step]) - data_a[-1], 0))
     return periodic_features
 
 # add yourself fitting features here...

@@ -250,8 +250,10 @@ detect_obj.rate_predict(data)
 ![data_info](images/python_api_rate_predict.png)
 
 ### 三、LIB库
-Metis工程目录下time_series_detector/lib目录为时间序列异常检测学件，可以在python代码或C代码中调用
-libdetect.so在CentOs7.2下编译，目前仅支持在CentOs7.2或更高版本Centos使用
+Metis工程目录下time_series_detector/lib为学件动态库目录，库文件可以在代码中加载调用
+
+libdetect.so目前支持在CentOs7.2+系统环境下使用
+
 
 
 #### Python代码中调用:
@@ -277,7 +279,7 @@ handle = metis_lib.load_model("./xgb_default_model")
 from ctypes import *
 
 class ValueData(Structure):
-    _fields_ = [('value_a', POINTER(c_int)), ('value_b', POINTER(c_int)), ('value_c', POINTER(c_int)),
+    _fields_ = [('data_a', POINTER(c_int)), ('data_b', POINTER(c_int)), ('data_c', POINTER(c_int)),
                 ('len_a', c_int), ('len_b', c_int), ('len_c', c_int)]
 
 # test data
@@ -309,9 +311,9 @@ print result, prob
 	
 ```
 typedef struct {
-    int* value_a;
-    int* value_b;
-    int* value_c;
+    int* data_a;
+    int* data_b;
+    int* data_c;
     int len_a;
     int len_b;
     int len_c;
@@ -322,7 +324,7 @@ typedef struct {
 | 名称  | 类型 |必填| 默认值 | 说明 |
 | --- | --- | --- |---- | --- |
 | handle|  int| 是| 无|模型句柄，由load_model返回|
-| ValueData|  struct| 是| 无|待检测数据|
+| data_value|  ValueData| 是| 无|待检测数据|
 
 
 
@@ -361,7 +363,7 @@ metis_lib = so("./libdetect.so")
 from ctypes import *
 
 class RateData(Structure):
-_fields_ = [('value_a', POINTER(c_double)), ('value_b', POINTER(c_double)), ('value_c', POINTER(c_double)),
+_fields_ = [('data_a', POINTER(c_double)), ('data_b', POINTER(c_double)), ('data_c', POINTER(c_double)),
             ('len_a', c_int), ('len_b', c_int), ('len_c', c_int)]
 
 # test data
@@ -393,9 +395,9 @@ print result, prob
 	
 ```
 typedef struct {
-    double* value_a;
-    double* value_b;
-    double* value_c;
+    double* data_a;
+    double* data_b;
+    double* data_c;
     int len_a;
     int len_b;
     int len_c;
@@ -405,7 +407,7 @@ typedef struct {
 
 | 名称  | 类型 |必填| 默认值 | 说明 |
 | --- | --- | --- |---- | --- |
-| ValueData|  struct| 是| 无|待检测数据|
+| data_value|  RateData| 是| 无|待检测数据|
 
 
 
@@ -424,9 +426,9 @@ typedef struct {
 | result | c_int | 检测结果是否异常。0:异常；1:正常 |
 | prob | c_float | 概率值，值越小，判定为异常的置信度越高 |
 
-####C代码中调用:
+#### C代码中调用:
 
-在C中调用检测函数，需要include头文件detect.h，在编译时链接libdetect.so文件。
+在C中调用检测函数，需要include头文件detect.h，在编译时链接libdetect.so文件
 ##### 1、量值检测
 * 功能说明：根据参考数据检测最近一个数据点是否异常
 
@@ -451,9 +453,9 @@ typedef struct {
 	
 ```
 typedef struct {
-    int* value_a;
-    int* value_b;
-    int* value_c;
+    int* data_a;
+    int* data_b;
+    int* data_c;
     int len_a;
     int len_b;
     int len_c;
@@ -464,7 +466,7 @@ typedef struct {
 | 名称  | 类型 |必填| 默认值 | 说明 |
 | --- | --- | --- |---- | --- |
 | handle|  int| 是| 无|模型句柄，由load_model返回|
-| ValueData|  struct| 是| 无|待检测数据|
+| value_data|  ValueData| 是| 无|待检测数据|
 
 
 
@@ -501,9 +503,9 @@ printf ("ret=%d result =%d prob = %f \n", ret, sample_result, prob);
 	
 ```
 typedef struct {
-    double* value_a;
-    double* value_b;
-    double* value_c;
+    double* data_a;
+    double* data_b;
+    double* data_c;
     int len_a;
     int len_b;
     int len_c;
@@ -513,7 +515,7 @@ typedef struct {
 
 | 名称  | 类型 |必填| 默认值 | 说明 |
 | --- | --- | --- |---- | --- |
-| ValueData|  struct| 是| 无|待检测数据|
+| rate_data|  RateData| 是| 无|待检测数据|
 
 
 * 返回参数：
