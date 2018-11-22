@@ -90,6 +90,7 @@ def normalize_time_series_by_max_min(split_time_series):
     time_series = split_time_series[0] + split_time_series[1][1:] + split_time_series[2] + split_time_series[3][1:] + split_time_series[4]
     max_value = np.max(time_series)
     min_value = np.min(time_series)
+    normalized_time_series = [0.0]*len(time_series)
     if max_value - min_value > 0:
         normalized_time_series = list((np.array(time_series) - min_value) / float(max_value - min_value))
 
