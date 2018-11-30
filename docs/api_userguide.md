@@ -536,5 +536,5 @@ prob
 
 #### Go代码中调用:
 
-在Go中调用检测函数，需要先加载cgo文件，编写helper函数供go调用；
+在Go中调用检测函数，需要先加载so文件，编写helper函数，再通过cgo调用；
 详细demo见 `time_series_detector/demo/golang`目录
