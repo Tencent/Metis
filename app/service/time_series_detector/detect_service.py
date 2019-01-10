@@ -8,17 +8,19 @@ https://opensource.org/licenses/BSD-3-Clause
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 """
 
-import time
 import os
 import threading
+import time
+
+from app.common.common import *
+from app.common.errorcode import *
 from app.dao.time_series_detector import anomaly_op
 from app.dao.time_series_detector import sample_op
 from app.dao.time_series_detector import train_op
-from time_series_detector.algorithm import xgboosting
 from time_series_detector import detect
-from app.common.errorcode import *
-from app.common.common import *
+from time_series_detector.algorithm import xgboosting
 from time_series_detector.common.tsd_errorcode import *
+
 MODEL_PATH = os.path.join(os.path.dirname(__file__), './model/')
 
 
@@ -97,7 +99,7 @@ class DetectService(object):
             return build_ret_data(LACK_SAMPLE, "")
         train_op_obj.insert_train_info(train_params)
         try:
-            t = threading.Thread(target=self.__generate_model, args=(samples_list, task_id, ))
+            t = threading.Thread(target=self.__generate_model, args=(samples_list, task_id,))
             t.setDaemon(False)
             t.start()
         except Exception:
@@ -120,7 +122,9 @@ class DetectService(object):
         return True
 
     def __check_param(self, data):
-        if ("viewName" not in data.keys()) or ("viewId" not in data.keys()) or ("attrId" not in data.keys()) or ("attrName" not in data.keys()) or ("time" not in data.keys()) or ("dataC" not in data.keys()) or ("dataB" not in data.keys()) or ("dataA" not in data.keys()):
+        if ("viewName" not in data.keys()) or ("viewId" not in data.keys()) or ("attrId" not in data.keys()) or (
+                "attrName" not in data.keys()) or ("time" not in data.keys()) or ("dataC" not in data.keys()) or (
+                "dataB" not in data.keys()) or ("dataA" not in data.keys()):
             return CHECK_PARAM_FAILED, "missing parameter"
         return OP_SUCCESS, ""
 
@@ -140,7 +144,8 @@ class DetectService(object):
                 "data_b": data["dataB"],
                 "data_a": data["dataA"]
             }
-            self.anomaly_op_obj.insert_anomaly(anomaly_params)
+        # always save anomaly data
+        self.anomaly_op_obj.insert_anomaly(anomaly_params)
         return build_ret_data(ret_code, ret_data)
 
     def rate_predict(self, data):
