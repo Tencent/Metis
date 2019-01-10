@@ -19,7 +19,7 @@ const advanceSearchDefault = {
 
 Model('sampleInfo', {
   data: {
-    dateTime: [moment().year(2018).month(9).date(1).hour(0).minute(0).second(0), moment().year(2018).month(9).date(7).hour(23).minute(59).second(59)],
+    dateTime: [moment().year(2019).month(0).date(1).hour(0).minute(0).second(0), moment().year(2019).month(5).date(31).hour(23).minute(59).second(59)],
     advanceSearch: _.cloneDeep(advanceSearchDefault),
     advanceSearchTemp: _.cloneDeep(advanceSearchDefault),
     dataSource: [],

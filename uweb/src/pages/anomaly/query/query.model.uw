@@ -11,12 +11,12 @@ const CONFIG = require('../../constant.json');
 
 Model('query', {
   data: {
-    dateTime: [moment().year(2018).month(9).date(1).hour(0).minute(0).second(0), moment().year(2018).month(9).date(7).hour(23).minute(59).second(59)],
+    dateTime: [moment().year(2019).month(0).date(1).hour(0).minute(0).second(0), moment().year(2019).month(5).date(31).hour(23).minute(59).second(59)],
     viewName: '',
     attrName: '',
     currentPage: 1,
     pageSize: 6,
-    pageSizeOptions: [6, 9, 12, 24],
+    pageSizeOptions: [6, 9, 12, 24, 48],
     total: 0,
     defaultChartOption: {},
     loading: false,
