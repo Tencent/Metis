@@ -90,8 +90,7 @@ class Detect(object):
         statistic_result = self.statistic_obj.predict(time_series)
         ewma_result = self.ewma_obj.predict(time_series)
         polynomial_result = self.polynomial_obj.predict(time_series, window)
-        iforest_result = self.iforest_obj.predict(time_series, window)
-        if statistic_result == 0 or ewma_result == 0 or polynomial_result == 0 or iforest_result == 0:
+        if statistic_result == 0 or ewma_result == 0 or polynomial_result == 0 :
             xgb_result = self.supervised_obj.predict(time_series, window, model_name)
             res_value = xgb_result[0]
             prob = xgb_result[1]
