@@ -198,5 +198,6 @@ docker ps
 查看三个容器（metis-db、metis-web、metis-svr）启动状态，如正常启动，则安装成功。
 ![docker_ps](images/docker_ps.png)
 如安装成功，可以通过浏览器直接访问: `http://${IP}`
+注意：Metis依赖80和8080端口，腾讯云服务器默认开通了80但没有开通8080的外网访问权限，需要手动在安全组中增加对8080端口的放通。
 
-请参考API使用说明进行API调用
+请参考API使用说明进行API调用 
