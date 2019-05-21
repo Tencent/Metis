@@ -1,5 +1,5 @@
 ## Learnware
-The idea of Learnware was originally proposed by Prof. Zhi-Hua Zhou at Nanjing University. **Learnware = model + specification**. It has three properties: Reusable, Evolvable, and Comprehensible.
+The idea of Learnware was originally proposed by Prof. Zhi-Hua Zhou at Nanjing University [1]. **Learnware = model + specification**. It has three properties: Reusable, Evolvable, and Comprehensible.
 Many practitioners might have already established similar model in their applications, and they are willing to find a place to share these models. When a new user wants to develop an app, it’s unnecessary to create a model on their own, instead, they can find a suitable model in “Learnware” marketplace and then modify it according to their needs. Learnware is based on industry adoption, which produces expert level results. There will not be information security issue because only the model is shared.
 
 
@@ -37,3 +37,6 @@ features with dimension up to 90+; Support for adding custom features.
 * KPI Data: Suitable for detection of business KPI data, such as trading volume, income value, online user number, success rate, etc.
 
 
+### Reference
+
+[1] Zhi-Hua Zhou. *"Learnware: On the Future of Machine Learning"*. National Key Laboratory for Novel Software Technology. 2016
