@@ -27,7 +27,7 @@ The development languages supported by the front and back ends are as follows:
 
 ## Overview
 
-* [Use scenario](docs/usecase.md)
+* [Use scenario](docs/usecase.en.md)
 * [Code directory](docs/code_framework.md)
 * [Code architecture](docs/architecture.md)
 
