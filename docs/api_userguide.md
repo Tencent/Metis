@@ -532,3 +532,9 @@ prob
 | ret | int | 返回码。0:成功；非0:失败 |
 | result | c_int | 检测结果是否异常。0:异常；1:正常 |
 | prob | c_float | 概率值，值越小，判定为异常的置信度越高 |
+
+#### Go代码中调用:
+
+在Go中调用检测函数，需要先加载so文件，编写helper函数，再通过cgo调用；
+详细demo见 `time_series_detector/demo/golang`目录
+
